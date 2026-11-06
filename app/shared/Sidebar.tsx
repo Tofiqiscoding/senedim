@@ -67,8 +67,8 @@ export default function Sidebar({ role, open, onClose }: { role: Role; open: boo
                   <span className="flex-1"><T>{g.label}</T></span>
                   <Icon name="chevron" className={`h-4 w-4 transition-transform ${expanded ? "" : "-rotate-90"}`} />
                 </button>
-                {expanded && (
-                  <ul className="ml-[39px] border-l border-white/15">
+                <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`} inert={!expanded}>
+                  <ul className="ml-[39px] overflow-hidden border-l border-white/15">
                     {g.items.map((i) => {
                       const active = isActive(i.href);
                       const n = showBadge(i.badge);
@@ -90,7 +90,7 @@ export default function Sidebar({ role, open, onClose }: { role: Role; open: boo
                       );
                     })}
                   </ul>
-                )}
+                </div>
               </div>
             );
           })}

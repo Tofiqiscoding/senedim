@@ -8,6 +8,7 @@ import PixelDivider from "./components/PixelDivider";
 import Teams from "./components/Teams";
 import Cta from "./components/Cta";
 import Footer from "./components/Footer";
+import Reveal from "./components/Reveal";
 
 export default function Home() {
   return (
@@ -15,13 +16,27 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
-        <Spotlight />
-        <Results />
-        <HowItWorks />
-        <Products />
-        <PixelDivider />
-        <Teams />
-        <Cta />
+        <Reveal>
+          <Spotlight />
+        </Reveal>
+        <Reveal>
+          <Results />
+        </Reveal>
+        <Reveal>
+          <HowItWorks />
+        </Reveal>
+        <Reveal>
+          <Products />
+        </Reveal>
+        <Reveal>
+          <PixelDivider />
+        </Reveal>
+        <Reveal>
+          <Teams />
+        </Reveal>
+        <Reveal>
+          <Cta />
+        </Reveal>
       </main>
       <Footer />
     </>

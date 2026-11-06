@@ -101,7 +101,7 @@ export default function HrDashboard() {
               {byDept.map(([d, n]) => (
                 <li key={d}>
                   <div className="mb-1.5 flex justify-between text-[14px]"><span><T>{d}</T></span><span className="tabular-nums text-ink/60">{n}</span></div>
-                  <div className="h-6 bg-ink/8"><div className="h-full bg-gradient-to-r from-cobalt to-sky" style={{ width: `${(n / max) * 100}%` }} /></div>
+                  <div className="h-6 bg-ink/8"><div className="bar-grow h-full bg-gradient-to-r from-cobalt to-sky" style={{ width: `${(n / max) * 100}%` }} /></div>
                 </li>
               ))}
             </ul>

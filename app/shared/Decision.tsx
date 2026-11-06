@@ -21,7 +21,7 @@ export default function Decision({ id, approveLabel = "Approve" }: { id: string;
   const approving = mode === "Approved";
   return (
     <form
-      className="flex flex-wrap items-center gap-1.5"
+      className="pop flex flex-wrap items-center gap-1.5"
       onSubmit={(e) => {
         e.preventDefault();
         actions.decideRequest(id, mode, note.trim());

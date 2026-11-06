@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useT } from "../i18n/LangProvider";
 import Link from "next/link";
 import Icon from "./Icon";
@@ -80,13 +81,34 @@ export function Btn({
   );
 }
 
+function useCountUp(target: number) {
+  const [v, setV] = useState(0);
+  const from = useRef(0);
+  useEffect(() => {
+    const start = performance.now();
+    const a = from.current;
+    let raf = 0;
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - start) / 800);
+      setV(Math.round(a + (target - a) * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) raf = requestAnimationFrame(tick);
+      else from.current = target;
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target]);
+  return v;
+}
+
 export function Stat({ label, value, note, tone }: { label: string; value: string; note: string; tone?: "up" | "warn" }) {
   const t = useT();
+  const isNum = /^\d+$/.test(value);
+  const counted = useCountUp(isNum ? Number(value) : 0);
   return (
     <div className="flex min-h-[170px] flex-col justify-between bg-white p-5 sm:p-6">
       <div className="text-[14px] text-ink/55">{t(label)}</div>
       <div>
-        <div className="text-[clamp(2.5rem,3.6vw,3.75rem)] leading-none tracking-[-0.04em]">{t(value)}</div>
+        <div className="text-[clamp(2.5rem,3.6vw,3.75rem)] leading-none tracking-[-0.04em] tabular-nums">{isNum ? counted : t(value)}</div>
         <div className={`mt-3 text-[13px] ${tone === "warn" ? "text-red-700" : tone === "up" ? "text-[#2f7a1f]" : "text-ink/55"}`}>
           {t(note)}
         </div>
@@ -128,7 +150,7 @@ export function Card({
 export function Progress({ value }: { value: number }) {
   return (
     <div className="h-1.5 w-full bg-ink/10">
-      <div className="h-full bg-leaf" style={{ width: `${value}%` }} />
+      <div className="bar-grow h-full bg-leaf transition-[width] duration-500" style={{ width: `${value}%` }} />
     </div>
   );
 }
@@ -300,7 +322,7 @@ export function LinkBtn({ href, children, primary = false, icon }: { href: strin
 export function Flash({ children, tone = "ok" }: { children: React.ReactNode; tone?: "ok" | "bad" }) {
   const t = useT();
   return (
-    <p role="status" className={`px-4 py-2.5 text-[14px] ${tone === "ok" ? "bg-lime/40 text-ink" : "bg-red-100 text-red-800"}`}>
+    <p role="status" className={`pop px-4 py-2.5 text-[14px] ${tone === "ok" ? "bg-lime/40 text-ink" : "bg-red-100 text-red-800"}`}>
       {typeof children === "string" ? t(children) : children}
     </p>
   );

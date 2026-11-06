@@ -635,6 +635,11 @@ export const az: Record<string, string> = {
   "Quality Control Manager": "Keyfiyyətə nəzarət meneceri",
   "Probation ends in 6 days": "Sınaq müddəti 6 gündən sonra bitir",
 
+
+  "Interactive demo — click around": "İnteraktiv demo — özünüz yoxlayın",
+  "Search workers": "İşçi axtar",
+  "PDF ready (demo)": "PDF hazırdır (demo)",
+
   /* ---------- misc ---------- */
   "Filter": "Filtr",
   "Coming next": "Tezliklə",

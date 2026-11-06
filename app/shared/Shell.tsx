@@ -28,7 +28,7 @@ export default function Shell({ role, children }: { role: Role; children: React.
       <Sidebar role={role} open={open} onClose={() => setOpen(false)} />
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar role={role} onMenu={() => setOpen(true)} />
-        <main className="flex-1 overflow-y-auto">{children}</main>
+        <main className="app-main flex-1 overflow-y-auto">{children}</main>
       </div>
     </div>
   );
