@@ -14,7 +14,7 @@ export default function Decision({ id, approveLabel = "Approve" }: { id: string;
 
   if (!mode) {
     return (
-      <span className="flex gap-1.5">
+      <span className="flex gap-1.5 whitespace-nowrap">
         <button type="button" onClick={() => setMode("Approved")} className="bg-ink px-3.5 py-2 text-[13px] text-lime transition hover:bg-[#10300d]"><T>{approveLabel}</T></button>
         <button type="button" onClick={() => setMode("Rejected")} className="border border-ink/25 bg-white px-3.5 py-2 text-[13px] transition hover:bg-mist"><T>Reject</T></button>
       </span>

@@ -645,6 +645,8 @@ export const az: Record<string, string> = {
 
   "Automation": "Avtomatlaşdırma",
 
+  "Search by worker, request or note": "İşçi, sorğu və ya qeyd üzrə axtar",
+
   /* ---------- misc ---------- */
   "Filter": "Filtr",
   "Coming next": "Tezliklə",

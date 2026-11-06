@@ -16,6 +16,7 @@ const monthsShort: [string, string][] = [
 ];
 
 const rules: [RegExp, (m: RegExpMatchArray) => string][] = [
+  [/^(\d+) of (\d+) requests$/, (m) => `${m[2]} sorğudan ${m[1]}`],
   [/^(\d+) working days?$/, (m) => `${m[1]} iş günü`],
   [/^(\d+) of (\d+) workers$/, (m) => `${m[2]} işçidən ${m[1]}`],
   [/^(\d+) onboarding now$/, (m) => `${m[1]} nəfər işə qəbul mərhələsindədir`],

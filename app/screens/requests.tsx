@@ -2,29 +2,32 @@
 
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { TODAY, type ReqKind, type ReqStatus } from "../lib/seed";
+import { TODAY, type ReqKind } from "../lib/seed";
 import { actions, useDemo, useSession } from "../lib/store";
 import { range, workdays } from "../lib/util";
 import Decision from "../shared/Decision";
-import { Body, Card, Chip, Empty, Field, Flash, inputCls, PageHeader, Person, Select, Table, Tabs, textareaCls, toneOf } from "../shared/ui";
+import { Body, Card, Chip, Empty, Field, Flash, inputCls, PageHeader, Person, Search, Select, Table, textareaCls, toneOf } from "../shared/ui";
 import { T } from "../i18n/LangProvider";
 import { tx } from "../i18n/translate";
 
 const KIND_LABEL: Record<ReqKind, string> = { leave: "Leave", trip: "Business trip", document: "Document" };
 const LEAVE_TYPES = ["Annual leave", "Sick leave", "Unpaid leave"];
 const DOC_TYPES = ["Work certificate", "Salary certificate", "Employment verification"];
-type KindTab = "all" | ReqKind;
-type StatusTab = ReqStatus | "all";
 
 /* ------------------------------ HR: one inbox ------------------------------ */
 export function HrRequests() {
   const s = useDemo();
-  const [kind, setKind] = useState<KindTab>("all");
-  const [st, setSt] = useState<StatusTab>("Pending");
+  const [q, setQ] = useState("");
+  const [kind, setKind] = useState("All types");
+  const [st, setSt] = useState("Pending");
   const worker = (id: string) => s.workers.find((w) => w.id === id);
-  const ofKind = s.requests.filter((r) => kind === "all" || r.kind === kind);
-  const rows = ofKind.filter((r) => st === "all" || r.status === st);
-  const total = (k: KindTab) => s.requests.filter((r) => k === "all" || r.kind === k).length;
+  const kindOf: Record<string, ReqKind | "all"> = { "All types": "all", Leave: "leave", "Business trips": "trip", Documents: "document" };
+  const rows = s.requests.filter(
+    (r) =>
+      (kindOf[kind] === "all" || r.kind === kindOf[kind]) &&
+      (st === "Any status" || r.status === st) &&
+      `${worker(r.workerId)?.name ?? ""} ${r.title} ${r.note} ${r.comment}`.toLowerCase().includes(q.toLowerCase()),
+  );
   // Smart checks shown next to pending leave requests, before HR decides.
   const checks = (r: (typeof rows)[number]) => {
     if (r.kind !== "leave" || r.status !== "Pending") return [] as { bad: boolean; text: string }[];
@@ -39,42 +42,16 @@ export function HrRequests() {
     if (!out.length && w) out.push({ bad: false, text: "✓ Qaydalar yoxlandı: balans kifayətdir, toqquşma yoxdur" });
     return out;
   };
-  const n = (x: ReqStatus) => ofKind.filter((r) => r.status === x).length;
 
   return (
     <>
       <PageHeader eyebrow="Requests" title="Requests" />
       <Body>
-        <Card title="All worker requests">
-          <div className="flex items-stretch border-b border-ink/10">
-            <span className="flex w-[72px] shrink-0 items-center pl-5 text-[13px] text-ink/45 sm:pl-6"><T>Type</T></span>
-            <div className="min-w-0 flex-1 [&>div]:border-b-0 [&>div]:pl-0">
-              <Tabs<KindTab>
-                value={kind}
-                onChange={setKind}
-                tabs={[
-                  { id: "all", label: "All types", count: total("all") },
-                  { id: "leave", label: "Leave", count: total("leave") },
-                  { id: "trip", label: "Business trips", count: total("trip") },
-                  { id: "document", label: "Documents", count: total("document") },
-                ]}
-              />
-            </div>
-          </div>
-          <div className="flex items-stretch border-b border-ink/10">
-            <span className="flex w-[72px] shrink-0 items-center pl-5 text-[13px] text-ink/45 sm:pl-6"><T>Status</T></span>
-            <div className="min-w-0 flex-1 [&>div]:border-b-0 [&>div]:pl-0">
-              <Tabs<StatusTab>
-                value={st}
-                onChange={setSt}
-                tabs={[
-                  { id: "Pending", label: "Pending", count: n("Pending") },
-                  { id: "Approved", label: "Approved", count: n("Approved") },
-                  { id: "Rejected", label: "Rejected", count: n("Rejected") },
-                  { id: "all", label: "Any status", count: ofKind.length },
-                ]}
-              />
-            </div>
+        <Card title={`${rows.length} of ${s.requests.length} requests`}>
+          <div className="flex flex-wrap items-center gap-3 border-b border-ink/10 px-5 py-4 sm:px-6">
+            <Search value={q} onChange={setQ} placeholder="Search by worker, request or note" />
+            <Select className="w-[200px]" value={kind} onChange={setKind} options={["All types", "Leave", "Business trips", "Documents"]} />
+            <Select className="w-[200px]" value={st} onChange={setSt} options={["Pending", "Approved", "Rejected", "Any status"]} />
           </div>
           {rows.length === 0 ? (
             <Empty text="Nothing here." />
