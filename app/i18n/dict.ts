@@ -640,6 +640,9 @@ export const az: Record<string, string> = {
   "Search workers": "İşçi axtar",
   "PDF ready (demo)": "PDF hazırdır (demo)",
 
+  "Any status": "İstənilən status",
+  "All types": "Bütün növlər",
+
   /* ---------- misc ---------- */
   "Filter": "Filtr",
   "Coming next": "Tezliklə",

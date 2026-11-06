@@ -24,7 +24,7 @@ export function HrRequests() {
   const worker = (id: string) => s.workers.find((w) => w.id === id);
   const ofKind = s.requests.filter((r) => kind === "all" || r.kind === kind);
   const rows = ofKind.filter((r) => st === "all" || r.status === st);
-  const pend = (k: KindTab) => s.requests.filter((r) => (k === "all" || r.kind === k) && r.status === "Pending").length;
+  const total = (k: KindTab) => s.requests.filter((r) => k === "all" || r.kind === k).length;
   const n = (x: ReqStatus) => ofKind.filter((r) => r.status === x).length;
 
   return (
@@ -32,26 +32,36 @@ export function HrRequests() {
       <PageHeader eyebrow="Requests" title="Requests" />
       <Body>
         <Card title="All worker requests">
-          <Tabs<KindTab>
-            value={kind}
-            onChange={setKind}
-            tabs={[
-              { id: "all", label: "All", count: pend("all") },
-              { id: "leave", label: "Leave", count: pend("leave") },
-              { id: "trip", label: "Business trips", count: pend("trip") },
-              { id: "document", label: "Documents", count: pend("document") },
-            ]}
-          />
-          <Tabs<StatusTab>
-            value={st}
-            onChange={setSt}
-            tabs={[
-              { id: "Pending", label: "Pending", count: n("Pending") },
-              { id: "Approved", label: "Approved", count: n("Approved") },
-              { id: "Rejected", label: "Rejected", count: n("Rejected") },
-              { id: "all", label: "Everything", count: ofKind.length },
-            ]}
-          />
+          <div className="flex items-stretch border-b border-ink/10">
+            <span className="flex w-[72px] shrink-0 items-center pl-5 text-[13px] text-ink/45 sm:pl-6"><T>Type</T></span>
+            <div className="min-w-0 flex-1 [&>div]:border-b-0 [&>div]:pl-0">
+              <Tabs<KindTab>
+                value={kind}
+                onChange={setKind}
+                tabs={[
+                  { id: "all", label: "All types", count: total("all") },
+                  { id: "leave", label: "Leave", count: total("leave") },
+                  { id: "trip", label: "Business trips", count: total("trip") },
+                  { id: "document", label: "Documents", count: total("document") },
+                ]}
+              />
+            </div>
+          </div>
+          <div className="flex items-stretch border-b border-ink/10">
+            <span className="flex w-[72px] shrink-0 items-center pl-5 text-[13px] text-ink/45 sm:pl-6"><T>Status</T></span>
+            <div className="min-w-0 flex-1 [&>div]:border-b-0 [&>div]:pl-0">
+              <Tabs<StatusTab>
+                value={st}
+                onChange={setSt}
+                tabs={[
+                  { id: "Pending", label: "Pending", count: n("Pending") },
+                  { id: "Approved", label: "Approved", count: n("Approved") },
+                  { id: "Rejected", label: "Rejected", count: n("Rejected") },
+                  { id: "all", label: "Any status", count: ofKind.length },
+                ]}
+              />
+            </div>
+          </div>
           {rows.length === 0 ? (
             <Empty text="Nothing here." />
           ) : (

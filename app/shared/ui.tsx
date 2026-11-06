@@ -221,7 +221,7 @@ export function Tabs<T extends string>({
 }: { tabs: { id: T; label: string; count?: number }[]; value: T; onChange: (t: T) => void }) {
   const tr = useT();
   return (
-    <div className="flex gap-6 overflow-x-auto border-b border-ink/10 px-5 sm:px-6" role="tablist">
+    <div className="no-scrollbar flex gap-6 overflow-x-auto overflow-y-hidden border-b border-ink/10 px-5 sm:px-6" role="tablist">
       {tabs.map((t) => (
         <button
           key={t.id}
