@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { hrContext } from "../lib/aiContext";
 import { DEPTS, HR_USER, TASKS, TODAY } from "../lib/seed";
 import { useDemo } from "../lib/store";
 import Decision from "../shared/Decision";
@@ -11,6 +13,9 @@ import { tx } from "../i18n/translate";
 
 export default function HrDashboard() {
   const s = useDemo();
+  const [aiText, setAiText] = useState("");
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiErr, setAiErr] = useState(false);
   const name = (id: string) => s.workers.find((w) => w.id === id)?.name ?? "—";
   const pending = s.requests.filter((r) => r.status === "Pending");
   const onboarding = Object.entries(s.tasks).filter(([id, t]) => s.workers.some((w) => w.id === id) && t.some((x) => !x));
@@ -21,6 +26,33 @@ export default function HrDashboard() {
     .sort((a, b) => a.left - b.left);
   const byDept = DEPTS.map((d) => [d, s.workers.filter((w) => w.dept === d).length] as const);
   const max = Math.max(1, ...byDept.map((x) => x[1]));
+  // Daily digest: computed from the data, optionally rewritten by the AI.
+  const kindCount = (k: string) => pending.filter((r) => r.kind === k).length;
+  const toSign = s.docs.filter((d) => d.status === "Pending").length;
+  const digest = [
+    pending.length ? `${pending.length} sorğu qərarınızı gözləyir (${kindCount("leave")} məzuniyyət, ${kindCount("trip")} ezamiyyət, ${kindCount("document")} sənəd).` : "Gözləyən sorğu yoxdur.",
+    expiring[0] ? `${expiring[0].w.name} üçün sınaq müddəti ${expiring[0].left} gündən sonra bitir.` : "Bu yaxınlarda bitən sınaq müddəti yoxdur.",
+    `${s.workers.filter((w) => w.status === "On leave").length} işçi hazırda məzuniyyətdədir, ${onboarding.length} işçinin işə qəbul siyahısı tamamlanmayıb.`,
+    toSign ? `${toSign} sənəd imza gözləyir.` : "İmza gözləyən sənəd yoxdur.",
+  ];
+  const askDigest = async () => {
+    setAiBusy(true);
+    setAiErr(false);
+    try {
+      const res = await fetch("/api/assistant", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role: "hr", question: "Bugünün HR icmalını 3 qısa cümlə ilə yaz: gözləyən sorğular, bitən sınaq müddətləri və imza gözləyən sənədlər.", data: hrContext(s) }),
+      });
+      const json = (await res.json()) as { text?: string };
+      if (!res.ok || !json.text) throw new Error("ai");
+      setAiText(json.text);
+    } catch {
+      setAiErr(true);
+    } finally {
+      setAiBusy(false);
+    }
+  };
   const activity = s.notices.filter((n) => n.to === "hr").slice(0, 5);
 
   return (
@@ -36,6 +68,25 @@ export default function HrDashboard() {
           <Stat label="Pending requests" value={String(pending.length)} note="Waiting for your decision" tone={pending.length ? "warn" : undefined} />
           <Stat label="Probation ending" value={String(expiring.length)} note={expiring[0] ? `${expiring[0].w.name} · ${expiring[0].left} days` : "Nothing urgent"} tone={expiring.length ? "warn" : undefined} />
         </Grid>
+
+        <div className="mt-px bg-ink/15">
+          <Card title="Günün icmalı">
+            <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.4fr_1fr]">
+              <ul className="space-y-2.5 text-[15px]">
+                {digest.map((d) => (
+                  <li key={d} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 bg-leaf" />{d}</li>
+                ))}
+              </ul>
+              <div className="space-y-3">
+                <button type="button" onClick={askDigest} disabled={aiBusy} className="flex items-center gap-2 border border-ink/25 px-4 py-2.5 text-[14px] transition hover:bg-mist disabled:opacity-50">
+                  {aiBusy ? <span className="flex gap-1"><i className="dot" /><i className="dot" /><i className="dot" /></span> : "✦"} AI ilə xülasə yaz
+                </button>
+                {aiText && <p className="pop whitespace-pre-wrap bg-mist px-4 py-3 text-[14px] leading-relaxed">{aiText}</p>}
+                {aiErr && <p className="text-[13px] text-ink/55">AI hazırda əlçatan deyil — yuxarıdakı icmal verilənlərdən hesablanıb.</p>}
+              </div>
+            </div>
+          </Card>
+        </div>
 
         <div className="mt-px grid gap-px bg-ink/15 xl:grid-cols-[1.45fr_1fr]">
           <Card title="Pending requests" action="Open inbox" href="/hr/requests">

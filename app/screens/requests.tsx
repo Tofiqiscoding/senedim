@@ -25,6 +25,20 @@ export function HrRequests() {
   const ofKind = s.requests.filter((r) => kind === "all" || r.kind === kind);
   const rows = ofKind.filter((r) => st === "all" || r.status === st);
   const total = (k: KindTab) => s.requests.filter((r) => k === "all" || r.kind === k).length;
+  // Smart checks shown next to pending leave requests, before HR decides.
+  const checks = (r: (typeof rows)[number]) => {
+    if (r.kind !== "leave" || r.status !== "Pending") return [] as { bad: boolean; text: string }[];
+    const w = worker(r.workerId);
+    const out: { bad: boolean; text: string }[] = [];
+    const days = workdays(r.from, r.to);
+    if (r.title === "Annual leave" && w && days > w.leaveBalance) out.push({ bad: true, text: `Balans kifayət etmir (${w.leaveBalance} < ${days} gün)` });
+    const clash = s.requests
+      .filter((o) => o.id !== r.id && o.kind === "leave" && o.status !== "Rejected" && o.from <= r.to && o.to >= r.from && worker(o.workerId)?.dept === w?.dept)
+      .map((o) => worker(o.workerId)?.name ?? "");
+    if (clash.length) out.push({ bad: false, text: `Eyni şöbədə üst-üstə düşür: ${clash.join(", ")}` });
+    if (!out.length && w) out.push({ bad: false, text: "✓ Qaydalar yoxlandı: balans kifayətdir, toqquşma yoxdur" });
+    return out;
+  };
   const n = (x: ReqStatus) => ofKind.filter((r) => r.status === x).length;
 
   return (
@@ -74,7 +88,12 @@ export function HrRequests() {
                   <span className="mt-0.5 block text-[13px] text-ink/45"><T>{KIND_LABEL[r.kind] + (r.kind === "leave" ? ` · ${workdays(r.from, r.to)} working days` : "")}</T></span>
                 </span>,
                 <span key="d" className="whitespace-nowrap text-ink/70"><T>{r.kind === "document" ? r.note || "—" : range(r.from, r.to)}</T></span>,
-                <span key="n" className="text-ink/60"><T>{r.comment ? `HR: ${r.comment}` : r.kind === "document" ? "" : r.note || "—"}</T></span>,
+                <span key="n" className="block text-ink/60">
+                  <T>{r.comment ? `HR: ${r.comment}` : r.kind === "document" ? "" : r.note || "—"}</T>
+                  {checks(r).map((c) => (
+                    <span key={c.text} className={`mt-1 block text-[12px] leading-snug ${c.bad ? "text-red-700" : c.text.startsWith("✓") ? "text-[#2f7a1f]" : "text-amber-800"}`}>{c.bad ? "⚠ " : c.text.startsWith("✓") ? "" : "⚠ "}{c.text}</span>
+                  ))}
+                </span>,
                 <Chip key="s" tone={toneOf(r.status)}>{r.status}</Chip>,
                 r.status === "Pending" ? <Decision key="a" id={r.id} approveLabel={r.kind === "document" ? "Generate" : "Approve"} /> : null,
               ])}

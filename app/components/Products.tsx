@@ -92,7 +92,7 @@ function Product1() {
             cols={["Name", "Template", "Date", "Status"]}
             rows={[
               { who: "Mahmud Ahmadov", cells: ["Contract", "12 Nov"], status: ["Signed", "ok"] },
-              { who: "Brett Pit", cells: ["Hire order", "11 Nov"], status: ["Signed", "ok"] },
+              { who: "Bret Pit", cells: ["Hire order", "11 Nov"], status: ["Signed", "ok"] },
               { who: "Tofig Changirov", cells: ["NDA", "11 Nov"], status: ["Pending", "warn"] },
               { who: "Faiq Tahirli", cells: ["Certificate", "09 Nov"], status: ["Draft", "bad"] },
             ]}

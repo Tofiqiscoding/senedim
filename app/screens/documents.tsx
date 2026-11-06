@@ -39,6 +39,7 @@ export function Contracts() {
   return (
     <>
       <PageHeader eyebrow="Documents" title="Contract generator">
+        <Btn onClick={() => { actions.hirePack(w.id); setSaved(`${w.name} üçün 3 sənəd (müqavilə, əmr, NDA) yaradıldı və imzaya göndərildi.`); }}>İşə qəbul paketi göndər</Btn>
         <Btn onClick={() => { actions.addDocument({ workerId: w.id, title: tpl, status: "Pending" }); setSaved(`${tpl} saved to ${w.name}’s file and sent for signature.`); }}><T>Save to personal file</T></Btn>
         <Btn icon="doc" primary onClick={() => window.print()}><T>Download PDF</T></Btn>
       </PageHeader>

@@ -97,7 +97,13 @@ export function signOut() {
 
 /* ---------- actions ---------- */
 const nid = (s: State, p: string) => `${p}${s.seq++}`;
+function logIt(s: State, rule: string, text: string) {
+  s.log.unshift({ id: nid(s, "l"), rule, text, when: "İndi" });
+  s.log = s.log.slice(0, 40);
+}
+const on = (s: State, rule: string) => s.rules[rule] !== false;
 function notify(s: State, to: string, text: string, sub: string, icon: string, href: string) {
+  if (!on(s, "notify")) return;
   s.notices.unshift({ id: nid(s, "n"), to, text, sub, when: "Just now", unread: true, icon, href });
 }
 const nameOf = (s: State, id: string) => s.workers.find((w) => w.id === id)?.name ?? "Worker";
@@ -108,13 +114,14 @@ export const actions = {
     mutate((s) => {
       id = nid(s, "w");
       s.workers.push({ ...input, id, leaveBalance: input.leaveBalance ?? 21 });
-      if (input.status === "Onboarding") {
+      if (input.status === "Onboarding" && on(s, "onboarding")) {
         // "Offer accepted" automation: checklist + contract draft + order draft
         s.tasks[id] = TASKS.map(() => false);
         s.docs.push(
           { id: nid(s, "x"), workerId: id, title: "Employment contract", status: "Draft", date: TODAY, by: "Leyla Hacıyeva" },
           { id: nid(s, "x"), workerId: id, title: "Order of hire", status: "Draft", date: TODAY, by: "Leyla Hacıyeva" },
         );
+        logIt(s, "onboarding", `${input.name} üçün 6 tapşırıqlıq siyahı və 2 sənəd layihəsi yaradıldı`);
       }
       notify(s, "hr", `Worker added · ${input.name}`, input.status === "Onboarding" ? "Contract draft and onboarding checklist created" : input.position, "user", `/hr/workers/${id}`);
     });
@@ -154,13 +161,22 @@ export const actions = {
       r.comment = comment;
       const w = s.workers.find((x) => x.id === r.workerId);
       if (status === "Approved") {
-        if (r.kind === "leave" && r.title === "Annual leave" && w) w.leaveBalance = Math.max(0, w.leaveBalance - workdays(r.from, r.to));
-        if (r.kind === "document") s.docs.unshift({ id: nid(s, "x"), workerId: r.workerId, title: r.title, status: "Ready", date: TODAY, by: "Leyla Hacıyeva" });
+        if (r.kind === "leave" && r.title === "Annual leave" && w && on(s, "leaveBalance")) {
+          const days = workdays(r.from, r.to);
+          const before = w.leaveBalance;
+          w.leaveBalance = Math.max(0, before - days);
+          logIt(s, "leaveBalance", `${w.name}: məzuniyyət balansı ${before} → ${w.leaveBalance} (${days} iş günü)`);
+        }
+        if (r.kind === "document" && on(s, "docRequest")) {
+          s.docs.unshift({ id: nid(s, "x"), workerId: r.workerId, title: r.title, status: "Ready", date: TODAY, by: "Leyla Hacıyeva" });
+          logIt(s, "docRequest", `${nameOf(s, r.workerId)} üçün “${r.title}” avtomatik hazırlandı`);
+        }
       }
       const what = r.kind === "document" ? `${r.title} request` : r.title;
       const page = r.kind === "document" && status === "Approved" ? "/worker/documents" : "/worker/requests";
       const fallback = status === "Approved" && r.kind === "document" ? "Ready in My documents" : "HR has reviewed your request";
       notify(s, r.workerId, `${what} ${status.toLowerCase()}`, comment ? `HR note: ${comment}` : fallback, status === "Approved" ? "check" : "x", page);
+      if (on(s, "notify")) logIt(s, "notify", `${nameOf(s, r.workerId)} üçün qərar bildirişi göndərildi (${status === "Approved" ? "təsdiq" : "rədd"})`);
     });
   },
 
@@ -178,6 +194,43 @@ export const actions = {
       d.status = "Signed";
       notify(s, "hr", `${d.title} signed · ${nameOf(s, d.workerId)}`, "Signature saved in the audit trail", "check", "/hr/documents");
     });
+  },
+
+  setRule(id: string, enabled: boolean) {
+    mutate((s) => {
+      s.rules[id] = enabled;
+    });
+  },
+
+  /** One click: contract + hire order + NDA, all sent to the worker for signature. */
+  hirePack(workerId: string): number {
+    let n = 0;
+    mutate((s) => {
+      const w = s.workers.find((x) => x.id === workerId);
+      if (!w) return;
+      for (const title of ["Employment contract", "Order of hire", "NDA"]) {
+        s.docs.unshift({ id: nid(s, "x"), workerId, title, status: "Pending", date: TODAY, by: "Leyla Hacıyeva" });
+        n++;
+      }
+      notify(s, workerId, "3 sənəd imzanızı gözləyir", "Müqavilə, işə qəbul əmri və NDA", "file", "/worker/documents");
+      logIt(s, "onboarding", `${w.name} üçün işə qəbul paketi (3 sənəd) yaradıldı və imzaya göndərildi`);
+    });
+    return n;
+  },
+
+  /** Monthly leave accrual: +2 days for everyone (max 30). */
+  closeMonth(): number {
+    let n = 0;
+    mutate((s) => {
+      if (!on(s, "accrual")) return;
+      for (const w of s.workers) {
+        w.leaveBalance = Math.min(30, w.leaveBalance + 2);
+        notify(s, w.id, "Məzuniyyət balansınız +2 gün artdı", `İndi ${w.leaveBalance} gün`, "calendar", "/worker/requests");
+        n++;
+      }
+      logIt(s, "accrual", `${n} işçinin illik məzuniyyət balansı +2 gün artırıldı`);
+    });
+    return n;
   },
 
   toggleTask(workerId: string, k: number) {

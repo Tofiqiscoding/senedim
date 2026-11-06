@@ -45,8 +45,20 @@ export const TASKS = [
   { t: "Meet the team", owner: "HR" },
 ];
 
+export const RULES = [
+  { id: "onboarding", title: "Yeni işçi → işə qəbul paketi", desc: "Statusu “İşə qəbul” olan işçi əlavə olunanda 6 tapşırıqlıq siyahı, müqavilə və əmr layihələri avtomatik yaranır." },
+  { id: "leaveBalance", title: "Təsdiqlənən illik məzuniyyət balansdan çıxılır", desc: "HR illik məzuniyyəti təsdiqləyəndə iş günləri (b.e.–cümə) işçinin balansından avtomatik çıxılır." },
+  { id: "docRequest", title: "Təsdiqlənən sənəd sorğusu sənədi yaradır", desc: "İş arayışı və digər sənəd sorğuları təsdiqlənəndə sənəd işçinin “Sənədlərim” bölməsində hazır olur." },
+  { id: "notify", title: "Hadisələr üzrə avtomatik bildirişlər", desc: "Yeni sorğu HR-a, qərar və imza tələbi isə işçiyə bildiriş kimi çatır." },
+  { id: "accrual", title: "Aylıq məzuniyyət artımı", desc: "“Ayı bağla” düyməsi hər işçinin illik məzuniyyət balansını +2 gün artırır (maksimum 30)." },
+] as const;
+
+export type LogEntry = { id: string; rule: string; text: string; when: string };
+
 export type State = {
   v: number;
+  rules: Record<string, boolean>;
+  log: LogEntry[];
   seq: number;
   workers: Worker[];
   requests: Req[];
@@ -78,8 +90,15 @@ const R = (id: string, workerId: string, kind: ReqKind, title: string, from: str
 
 export function seed(): State {
   return {
-    v: 4,
+    v: 5,
     seq: 100,
+    rules: { onboarding: true, leaveBalance: true, docRequest: true, notify: true, accrual: true },
+    log: [
+      { id: "l1", rule: "notify", text: "Bret Pit: sınaq müddəti 6 gündən sonra bitir — HR-a xəbərdarlıq göndərildi", when: "Bu gün" },
+      { id: "l2", rule: "docRequest", text: "Mahmud Ahmadov üçün “İş arayışı” avtomatik hazırlandı", when: "4 Noy" },
+      { id: "l3", rule: "onboarding", text: "Tofig Changirov üçün 6 tapşırıqlıq siyahı və 2 sənəd layihəsi yaradıldı", when: "1 Noy" },
+      { id: "l4", rule: "leaveBalance", text: "Mahmud Ahmadov: məzuniyyət balansı 18 → 13 (5 iş günü)", when: "31 Okt" },
+    ],
     workers: [
       W(1, "Mahmud Ahmadov", "Product Designer", "IT", "2022-06-01", "Active", 2400, 13),
       W(2, "Hummet Azimzada", "Sales Manager", "Sales", "2020-01-20", "Active", 3600, 9, 0),
@@ -109,7 +128,7 @@ export function seed(): State {
       R("t4", "w6", "trip", "Baku → Shamakhi", "2026-11-12", "2026-11-12", "Client visit", "Approved"),
       R("t5", "w1", "trip", "Baku → Ganja", "2026-10-03", "2026-10-04", "User research", "Rejected", "Not in this quarter’s budget."),
       R("d1", "w3", "document", "Work certificate", "2026-11-06", "2026-11-06", "For bank"),
-      R("d2", "w13", "document", "Employment verification", "2026-11-05", "2026-11-05", "For embassy"),
+      R("d2", "w11", "document", "Employment verification", "2026-11-05", "2026-11-05", "For embassy"),
       R("d3", "w1", "document", "Work certificate", "2026-11-04", "2026-11-04", "For visa", "Approved"),
       R("d4", "w10", "document", "Salary certificate", "2026-11-03", "2026-11-03", "For mortgage", "Approved"),
     ],
@@ -133,7 +152,7 @@ export function seed(): State {
     },
     notices: [
       { id: "n1", to: "hr", text: "New leave request · Mahmud Ahmadov", sub: "Annual leave, 12 – 16 Nov", when: "2 h ago", unread: true, icon: "calendar", href: "/hr/requests" },
-      { id: "n2", to: "hr", text: "Probation ends in 6 days · Brett Pit", sub: "Decide to confirm or extend", when: "1 h ago", unread: true, icon: "clock", href: "/hr/workers/w6" },
+      { id: "n2", to: "hr", text: "Probation ends in 6 days · Bret Pit", sub: "Decide to confirm or extend", when: "1 h ago", unread: true, icon: "clock", href: "/hr/workers/w6" },
       { id: "n3", to: "hr", text: "Document request · Tofig Changirov", sub: "Work certificate for bank", when: "Today", unread: true, icon: "file", href: "/hr/requests" },
       { id: "n4", to: "w1", text: "Your sick leave was approved", sub: "20 – 21 Oct", when: "Yesterday", unread: false, icon: "check", href: "/worker/requests" },
       { id: "n5", to: "w1", text: "Work certificate is ready", sub: "You can view and download it in My documents", when: "2 days ago", unread: true, icon: "file", href: "/worker/documents" },

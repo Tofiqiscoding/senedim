@@ -643,6 +643,8 @@ export const az: Record<string, string> = {
   "Any status": "İstənilən status",
   "All types": "Bütün növlər",
 
+  "Automation": "Avtomatlaşdırma",
+
   /* ---------- misc ---------- */
   "Filter": "Filtr",
   "Coming next": "Tezliklə",

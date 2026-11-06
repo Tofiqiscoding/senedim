@@ -22,6 +22,7 @@ export const nav: Record<Role, NavGroup[]> = {
         { label: "Document history", href: "/hr/documents" },
       ],
     },
+    { id: "auto", label: "Automation", icon: "bolt", items: [{ label: "Automation", href: "/hr/automation" }] },
     { id: "ai", label: "AI", icon: "chat", items: [{ label: "HR insights", href: "/hr/assistant" }] },
     {
       id: "account", label: "Account", icon: "bell",
