@@ -7,6 +7,8 @@ import { DEPTS, STATUSES, TODAY, type Dept, type Worker, type WorkerStatus } fro
 import { actions, useDemo } from "../lib/store";
 import { fmt, range } from "../lib/util";
 import { Avatar, Body, Btn, Card, Chip, Empty, Field, Flash, inputCls, LinkBtn, PageHeader, Person, Search, Select, Table, toneOf } from "../shared/ui";
+import { T } from "../i18n/LangProvider";
+import { tx } from "../i18n/translate";
 
 export function WorkersList() {
   const s = useDemo();
@@ -22,12 +24,12 @@ export function WorkersList() {
   return (
     <>
       <PageHeader eyebrow="People" title="Workers">
-        <LinkBtn href="/hr/workers/new" icon="plus" primary>Add worker</LinkBtn>
+        <LinkBtn href="/hr/workers/new" icon="plus" primary><T>Add worker</T></LinkBtn>
       </PageHeader>
       <Body>
         <Card title={`${list.length} of ${s.workers.length} workers`}>
           <div className="flex flex-wrap items-center gap-3 border-b border-ink/10 px-5 py-4 sm:px-6">
-            <Search value={q} onChange={setQ} placeholder="Search by name, position or email" />
+            <Search value={q} onChange={setQ} placeholder={tx("Search by name, position or email")} />
             <Select className="w-[200px]" value={dept} onChange={setDept} options={["All departments", ...DEPTS]} />
             <Select className="w-[180px]" value={st} onChange={setSt} options={["All statuses", ...STATUSES]} />
           </div>
@@ -41,9 +43,9 @@ export function WorkersList() {
                 w.position,
                 w.dept,
                 <span key="d" className="text-ink/70">{fmt(w.start)}</span>,
-                <span key="l" className="tabular-nums">{w.leaveBalance} days</span>,
+                <span key="l" className="tabular-nums"><T>{`${w.leaveBalance} days`}</T></span>,
                 <Chip key="s" tone={toneOf(w.status)}>{w.status}</Chip>,
-                <Link key="e" href={`/hr/workers/${w.id}`} className="text-[14px] text-ink/60 hover:text-ink">Edit →</Link>,
+                <Link key="e" href={`/hr/workers/${w.id}`} className="text-[14px] text-ink/60 hover:text-ink"><T>Edit →</T></Link>,
               ])}
             />
           )}
@@ -116,23 +118,23 @@ export function WorkerForm({ worker }: { worker?: Worker }) {
       </div>
       <div className="grid gap-5 border-t border-ink/10 pt-6 sm:grid-cols-2">
         {text("position", "Position", { placeholder: "e.g. Product Designer", required: true })}
-        <Field label="Department"><Select value={f.dept} onChange={(v) => set("dept", v as Dept)} options={[...DEPTS]} /></Field>
+        <Field label="Department"><Select value={tx(f.dept)} onChange={(v) => set("dept", v as Dept)} options={[...DEPTS]} /></Field>
         {text("start", "Start date", { type: "date" })}
         <Field label="Status"><Select value={f.status} onChange={(v) => set("status", v as WorkerStatus)} options={STATUSES} /></Field>
         {text("salary", "Monthly salary (AZN)", { type: "number", min: 0, placeholder: "e.g. 2200" })}
-        <Field label="Contract type"><Select value={f.contractType} onChange={(v) => set("contractType", v as Form["contractType"])} options={["Open-ended", "Fixed-term"]} /></Field>
+        <Field label="Contract type"><Select value={tx(f.contractType)} onChange={(v) => set("contractType", v as Form["contractType"])} options={["Open-ended", "Fixed-term"]} /></Field>
         {text("probationMonths", "Probation (months)", { type: "number", min: 0, max: 6 })}
         {text("leaveBalance", "Annual leave left (days)", { type: "number", min: 0, max: 60 })}
       </div>
       {!worker && f.status === "Onboarding" && (
         <p className="bg-mist px-4 py-3 text-[14px] text-ink/70">
-          Saving creates the worker, a draft employment contract, a draft hire order and a 6-task onboarding checklist automatically.
+          <T>Saving creates the worker, a draft employment contract, a draft hire order and a 6-task onboarding checklist automatically.</T>
         </p>
       )}
       {error && <Flash tone="bad">{error}</Flash>}
-      {saved && <Flash>Changes saved.</Flash>}
+      {saved && <Flash><T>Changes saved.</T></Flash>}
       <div className="flex gap-2">
-        <button type="submit" className="bg-ink px-5 py-3 text-lime transition hover:bg-[#10300d]">{worker ? "Save changes" : "Add worker"}</button>
+        <button type="submit" className="bg-ink px-5 py-3 text-lime transition hover:bg-[#10300d]"><T>{worker ? "Save changes" : "Add worker"}</T></button>
         <Btn onClick={() => router.push("/hr/workers")}>{worker ? "Back to workers" : "Cancel"}</Btn>
       </div>
     </form>
@@ -170,7 +172,7 @@ export function WorkerDetail({ id }: { id: string }) {
   return (
     <>
       <PageHeader eyebrow="People · Workers" title={w.name}>
-        <LinkBtn href="/hr/contracts" icon="file">Generate document</LinkBtn>
+        <LinkBtn href="/hr/contracts" icon="file"><T>Generate document</T></LinkBtn>
       </PageHeader>
       <Body>
         <div className="grid gap-px bg-ink/15 xl:grid-cols-[340px_1fr]">
@@ -178,25 +180,25 @@ export function WorkerDetail({ id }: { id: string }) {
             <div className="bg-white p-6">
               <Avatar initials={w.name.split(" ").map((x) => x[0]).slice(0, 2).join("")} size={88} />
               <div className="mt-4 text-[22px] leading-tight tracking-[-0.02em]">{w.name}</div>
-              <div className="mt-1 text-ink/60">{w.position} · {w.dept}</div>
-              <div className="mt-3 flex flex-wrap gap-2"><Chip tone={toneOf(w.status)}>{w.status}</Chip><Chip>{w.contractType}</Chip></div>
+              <div className="mt-1 text-ink/60">{tx(w.position)} · {tx(w.dept)}</div>
+              <div className="mt-3 flex flex-wrap gap-2"><Chip tone={toneOf(w.status)}>{w.status}</Chip><Chip>{tx(w.contractType)}</Chip></div>
               <dl className="mt-5 divide-y divide-ink/10 text-[14px]">
                 {[["Started", fmt(w.start)], ["Leave left", `${w.leaveBalance} days`], ["Salary", `${w.salary} AZN`]].map(([k, v]) => (
-                  <div key={k} className="flex justify-between py-2.5"><dt className="text-ink/55">{k}</dt><dd>{v}</dd></div>
+                  <div key={k} className="flex justify-between py-2.5"><dt className="text-ink/55"><T>{k}</T></dt><dd><T>{v}</T></dd></div>
                 ))}
               </dl>
-              {tasks && <p className="mt-4 text-[13px] text-ink/55">Onboarding: {tasks.filter(Boolean).length}/{tasks.length} tasks done</p>}
+              {tasks && <p className="mt-4 text-[13px] text-ink/55"><T>{`Onboarding: ${tasks.filter(Boolean).length}/${tasks.length} tasks done`}</T></p>}
             </div>
             <div className="bg-white p-6">
-              <div className="mb-3 text-[15px]">Danger zone</div>
+              <div className="mb-3 text-[15px]"><T>Danger zone</T></div>
               {!confirm ? (
-                <Btn onClick={() => setConfirm(true)}>Remove worker</Btn>
+                <Btn onClick={() => setConfirm(true)}><T>Remove worker</T></Btn>
               ) : (
                 <div className="space-y-3">
-                  <p className="text-[13px] text-ink/60">This removes the worker with their requests and documents.</p>
+                  <p className="text-[13px] text-ink/60"><T>This removes the worker with their requests and documents.</T></p>
                   <div className="flex gap-2">
-                    <button type="button" onClick={() => { actions.removeWorker(id); router.replace("/hr/workers"); }} className="bg-red-700 px-4 py-2.5 text-[14px] text-white">Yes, remove</button>
-                    <Btn onClick={() => setConfirm(false)}>Cancel</Btn>
+                    <button type="button" onClick={() => { actions.removeWorker(id); router.replace("/hr/workers"); }} className="bg-red-700 px-4 py-2.5 text-[14px] text-white"><T>Yes, remove</T></button>
+                    <Btn onClick={() => setConfirm(false)}><T>Cancel</T></Btn>
                   </div>
                 </div>
               )}
@@ -211,7 +213,7 @@ export function WorkerDetail({ id }: { id: string }) {
             {docs.length === 0 ? <Empty text="No documents yet." /> : (
               <ul>{docs.map((d) => (
                 <li key={d.id} className="flex items-center justify-between border-b border-ink/10 px-6 py-3.5 last:border-b-0">
-                  <div className="leading-tight"><div>{d.title}</div><div className="mt-0.5 text-[13px] text-ink/50">{fmt(d.date)}</div></div>
+                  <div className="leading-tight"><div>{tx(d.title)}</div><div className="mt-0.5 text-[13px] text-ink/50">{fmt(d.date)}</div></div>
                   <Chip tone={toneOf(d.status)}>{d.status}</Chip>
                 </li>
               ))}</ul>
@@ -221,7 +223,7 @@ export function WorkerDetail({ id }: { id: string }) {
             {reqs.length === 0 ? <Empty text="No requests yet." /> : (
               <ul>{reqs.map((r) => (
                 <li key={r.id} className="flex items-center justify-between gap-3 border-b border-ink/10 px-6 py-3.5 last:border-b-0">
-                  <div className="leading-tight"><div>{r.title}</div><div className="mt-0.5 text-[13px] text-ink/50">{r.kind === "document" ? r.note : range(r.from, r.to)}</div></div>
+                  <div className="leading-tight"><div>{tx(r.title)}</div><div className="mt-0.5 text-[13px] text-ink/50"><T>{r.kind === "document" ? r.note : range(r.from, r.to)}</T></div></div>
                   <Chip tone={toneOf(r.status)}>{r.status}</Chip>
                 </li>
               ))}</ul>

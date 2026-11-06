@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "senedim – HR Workflow Automation",
+  title: "senedim – HR iş axını avtomatlaşdırması",
   description:
     "One portal that automates hiring paperwork, contracts and everyday HR processes.",
 };
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
-      lang="en"
+      lang="az"
       className={`${grotesk.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">

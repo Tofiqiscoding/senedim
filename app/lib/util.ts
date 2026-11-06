@@ -1,4 +1,4 @@
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const MONTHS = ["Yan", "Fev", "Mar", "Apr", "May", "İyn", "İyl", "Avq", "Sen", "Okt", "Noy", "Dek"];
 const utc = (iso: string) => {
   const [y, m, d] = iso.split("-").map(Number);
   return Date.UTC(y, (m || 1) - 1, d || 1);

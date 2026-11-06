@@ -7,6 +7,8 @@ import { seed } from "../lib/seed";
 import { actions, signOut, useDemo, useSession } from "../lib/store";
 import Icon from "./Icon";
 import { titleFor, type Role } from "./nav";
+import { T } from "../i18n/LangProvider";
+import { tx } from "../i18n/translate";
 
 export default function Topbar({ role, onMenu }: { role: Role; onMenu: () => void }) {
   const pathname = usePathname();
@@ -35,29 +37,29 @@ export default function Topbar({ role, onMenu }: { role: Role; onMenu: () => voi
           <Icon name="menu" className="h-6 w-6" />
         </button>
         <div className="min-w-0 leading-tight">
-          <div className="truncate text-[13px] text-ink/50">{group}</div>
-          <div className="truncate text-[17px]">{label}</div>
+          <div className="truncate text-[13px] text-ink/50"><T>{group}</T></div>
+          <div className="truncate text-[17px]"><T>{label}</T></div>
         </div>
       </div>
       <div className="flex items-stretch">
         <div className="hidden items-center gap-2 border-l border-ink/15 px-5 text-[13px] text-ink/50 lg:flex">
           <Icon name="clock" className="h-4 w-4" />
-          Demo date · Fri 6 Nov 2026
+          <T>Demo date · Fri 6 Nov 2026</T>
         </div>
         <div className="flex items-center gap-1.5 border-l border-ink/15 px-3 sm:px-4">
           {confirm ? (
             <>
-              <button type="button" onClick={reset} className="bg-red-700 px-3 py-2 text-[13px] text-white">Yes, reset all</button>
-              <button type="button" onClick={() => setConfirm(false)} className="px-2 py-2 text-[13px] text-ink/60 hover:text-ink">Cancel</button>
+              <button type="button" onClick={reset} className="bg-red-700 px-3 py-2 text-[13px] text-white"><T>Yes, reset all</T></button>
+              <button type="button" onClick={() => setConfirm(false)} className="px-2 py-2 text-[13px] text-ink/60 hover:text-ink"><T>Cancel</T></button>
             </>
           ) : (
             <button
               type="button"
               onClick={() => setConfirm(true)}
-              title="Reset requests, decisions, workers and documents to the original sample data"
+              title={tx("Reset requests, decisions, workers and documents to the original sample data")}
               className="border border-ink/25 px-3 py-2 text-[13px] transition hover:bg-mist"
             >
-              Reset demo
+              <T>Reset demo</T>
             </button>
           )}
         </div>

@@ -35,7 +35,7 @@ const Ctx = createContext<{ lang: Lang; setLang: (l: Lang) => void; t: (s: strin
 
 export function LangProvider({ children }: { children: React.ReactNode }) {
   const stored = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  const lang: Lang = LANG_ENABLED ? stored : "en";
+  const lang: Lang = LANG_ENABLED ? stored : "az"; // Azerbaijani only
   const setLang = useCallback((l: Lang) => {
     try {
       localStorage.setItem(KEY, l);

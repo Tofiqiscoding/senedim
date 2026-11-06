@@ -6,6 +6,8 @@ import { useDemo } from "../lib/store";
 import Decision from "../shared/Decision";
 import { addMonths, diffDays, fmtShort, range } from "../lib/util";
 import { Avatar, Card, Chip, Grid, LinkBtn, PageHeader, Progress, Stat } from "../shared/ui";
+import { T } from "../i18n/LangProvider";
+import { tx } from "../i18n/translate";
 
 export default function HrDashboard() {
   const s = useDemo();
@@ -23,9 +25,9 @@ export default function HrDashboard() {
 
   return (
     <>
-      <PageHeader eyebrow="Friday 6 November" title={<>Good morning, <span className="text-leaf">{HR_USER.name.split(" ")[0]}</span></>}>
-        <LinkBtn href="/hr/workers/new" icon="plus" primary>Add worker</LinkBtn>
-        <LinkBtn href="/hr/contracts" icon="file">Generate contract</LinkBtn>
+      <PageHeader eyebrow="Friday 6 November" title={<><T>Good morning,</T> <span className="text-leaf">{HR_USER.name.split(" ")[0]}</span></>}>
+        <LinkBtn href="/hr/workers/new" icon="plus" primary><T>Add worker</T></LinkBtn>
+        <LinkBtn href="/hr/contracts" icon="file"><T>Generate contract</T></LinkBtn>
       </PageHeader>
       <div className="border-b border-ink/15">
         <Grid cols="grid-cols-2 lg:grid-cols-4">
@@ -38,15 +40,15 @@ export default function HrDashboard() {
         <div className="mt-px grid gap-px bg-ink/15 xl:grid-cols-[1.45fr_1fr]">
           <Card title="Pending requests" action="Open inbox" href="/hr/requests">
             {pending.length === 0 ? (
-              <div className="px-6 py-12 text-center text-ink/50">All caught up — no pending requests.</div>
+              <div className="px-6 py-12 text-center text-ink/50"><T>All caught up — no pending requests.</T></div>
             ) : (
               <ul>
                 {pending.slice(0, 5).map((r) => (
                   <li key={r.id} className="flex flex-wrap items-center gap-4 border-b border-ink/10 px-5 py-4 last:border-b-0 sm:px-6">
                     <Avatar initials={name(r.workerId).split(" ").map((x) => x[0]).join("")} />
                     <div className="min-w-[160px] flex-1 leading-tight">
-                      <div className="truncate text-[15px]">{name(r.workerId)} <span className="text-ink/45">· {r.title}</span></div>
-                      <div className="mt-1 truncate text-[13px] text-ink/55">{r.kind === "document" ? r.note || "Document request" : range(r.from, r.to)}</div>
+                      <div className="truncate text-[15px]">{name(r.workerId)} <span className="text-ink/45">· {tx(r.title)}</span></div>
+                      <div className="mt-1 truncate text-[13px] text-ink/55"><T>{r.kind === "document" ? r.note || "Document request" : range(r.from, r.to)}</T></div>
                     </div>
                     <Decision id={r.id} approveLabel={r.kind === "document" ? "Generate" : "Approve"} />
                   </li>
@@ -56,14 +58,14 @@ export default function HrDashboard() {
           </Card>
           <Card title="Expiring probation" action="Workers" href="/hr/workers">
             {expiring.length === 0 ? (
-              <div className="px-6 py-12 text-center text-ink/50">No probation periods ending soon.</div>
+              <div className="px-6 py-12 text-center text-ink/50"><T>No probation periods ending soon.</T></div>
             ) : (
               <ul>
                 {expiring.map(({ w, left }) => (
                   <li key={w.id} className="flex items-center justify-between gap-3 border-b border-ink/10 px-5 py-4 last:border-b-0 sm:px-6">
                     <Link href={`/hr/workers/${w.id}`} className="leading-tight hover:underline">
                       <div className="text-[15px]">{w.name}</div>
-                      <div className="mt-1 text-[13px] text-ink/55">Probation ends {fmtShort(addMonths(w.start, w.probationMonths))}</div>
+                      <div className="mt-1 text-[13px] text-ink/55"><T>{`Probation ends ${fmtShort(addMonths(w.start, w.probationMonths))}`}</T></div>
                     </Link>
                     <Chip tone={left <= 14 ? "bad" : "warn"}>{left < 0 ? "overdue" : `in ${left} days`}</Chip>
                   </li>
@@ -76,7 +78,7 @@ export default function HrDashboard() {
         <div className="mt-px grid gap-px bg-ink/15 xl:grid-cols-3">
           <Card title="Onboarding in progress" action="Checklists" href="/hr/onboarding">
             {onboarding.length === 0 ? (
-              <div className="px-6 py-12 text-center text-ink/50">Nobody is onboarding.</div>
+              <div className="px-6 py-12 text-center text-ink/50"><T>Nobody is onboarding.</T></div>
             ) : (
               <ul>
                 {onboarding.map(([id, t]) => {
@@ -98,7 +100,7 @@ export default function HrDashboard() {
             <ul className="space-y-4 px-5 py-5 sm:px-6">
               {byDept.map(([d, n]) => (
                 <li key={d}>
-                  <div className="mb-1.5 flex justify-between text-[14px]"><span>{d}</span><span className="tabular-nums text-ink/60">{n}</span></div>
+                  <div className="mb-1.5 flex justify-between text-[14px]"><span><T>{d}</T></span><span className="tabular-nums text-ink/60">{n}</span></div>
                   <div className="h-6 bg-ink/8"><div className="h-full bg-gradient-to-r from-cobalt to-sky" style={{ width: `${(n / max) * 100}%` }} /></div>
                 </li>
               ))}
@@ -113,8 +115,8 @@ export default function HrDashboard() {
                     {i < activity.length - 1 && <span className="mt-1 w-px flex-1 bg-ink/15" />}
                   </div>
                   <div className="leading-tight">
-                    <div className="text-[15px]">{n.text}</div>
-                    <div className="mt-1 text-[13px] text-ink/50">{n.when}</div>
+                    <div className="text-[15px]"><T>{n.text}</T></div>
+                    <div className="mt-1 text-[13px] text-ink/50"><T>{n.when}</T></div>
                   </div>
                 </li>
               ))}

@@ -298,9 +298,10 @@ export function LinkBtn({ href, children, primary = false, icon }: { href: strin
 }
 
 export function Flash({ children, tone = "ok" }: { children: React.ReactNode; tone?: "ok" | "bad" }) {
+  const t = useT();
   return (
     <p role="status" className={`px-4 py-2.5 text-[14px] ${tone === "ok" ? "bg-lime/40 text-ink" : "bg-red-100 text-red-800"}`}>
-      {children}
+      {typeof children === "string" ? t(children) : children}
     </p>
   );
 }

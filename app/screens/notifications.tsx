@@ -5,6 +5,7 @@ import { useState } from "react";
 import { actions, useDemo, useSession } from "../lib/store";
 import Icon from "../shared/Icon";
 import { Body, Btn, Card, Empty, PageHeader, Tabs } from "../shared/ui";
+import { T } from "../i18n/LangProvider";
 
 export function Notifications() {
   const s = useDemo();
@@ -19,7 +20,7 @@ export function Notifications() {
   return (
     <>
       <PageHeader eyebrow="Account" title="Notifications">
-        <Btn onClick={() => actions.markAllRead(me)}>Mark all as read</Btn>
+        <Btn onClick={() => actions.markAllRead(me)}><T>Mark all as read</T></Btn>
       </PageHeader>
       <Body>
         <Card title="Inbox">
@@ -35,11 +36,11 @@ export function Notifications() {
                       <Icon name={n.icon} className="h-4 w-4" />
                     </span>
                     <span className="flex-1 leading-tight">
-                      <span className="block text-[15px]">{n.text}</span>
-                      <span className="mt-1 block text-[13px] text-ink/55">{n.sub}</span>
+                      <span className="block text-[15px]"><T>{n.text}</T></span>
+                      <span className="mt-1 block text-[13px] text-ink/55"><T>{n.sub}</T></span>
                     </span>
                     <span className="flex items-center gap-3 text-[13px] text-ink/45">
-                      {n.when}
+                      <T>{n.when}</T>
                       {n.unread && <span className="h-2 w-2 rounded-full bg-leaf" />}
                     </span>
                   </button>

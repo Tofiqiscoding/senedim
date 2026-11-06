@@ -22,6 +22,7 @@ export const nav: Record<Role, NavGroup[]> = {
         { label: "Document history", href: "/hr/documents" },
       ],
     },
+    { id: "ai", label: "AI", icon: "chat", items: [{ label: "HR insights", href: "/hr/assistant" }] },
     {
       id: "account", label: "Account", icon: "bell",
       items: [
@@ -34,6 +35,7 @@ export const nav: Record<Role, NavGroup[]> = {
     { id: "overview", label: "Overview", icon: "dashboard", items: [{ label: "Dashboard", href: "/worker" }] },
     { id: "requests", label: "Requests", icon: "calendar", items: [{ label: "Requests", href: "/worker/requests" }] },
     { id: "documents", label: "Documents", icon: "file", items: [{ label: "My documents", href: "/worker/documents", badge: "document" }] },
+    { id: "ai", label: "AI", icon: "chat", items: [{ label: "HR assistant", href: "/worker/assistant" }] },
     {
       id: "account", label: "Account", icon: "user",
       items: [

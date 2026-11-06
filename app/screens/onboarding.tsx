@@ -6,6 +6,8 @@ import { TASKS } from "../lib/seed";
 import { actions, useDemo } from "../lib/store";
 import { fmt } from "../lib/util";
 import { Avatar, Body, Card, Chip, Empty, LinkBtn, PageHeader, Progress } from "../shared/ui";
+import { T } from "../i18n/LangProvider";
+import { tx } from "../i18n/translate";
 
 export function Onboarding() {
   const s = useDemo();
@@ -17,7 +19,7 @@ export function Onboarding() {
   return (
     <>
       <PageHeader eyebrow="People" title="Onboarding">
-        <LinkBtn href="/hr/workers/new" icon="plus" primary>Offer accepted → add worker</LinkBtn>
+        <LinkBtn href="/hr/workers/new" icon="plus" primary><T>Offer accepted → add worker</T></LinkBtn>
       </PageHeader>
       <Body>
         {!cur ? (
@@ -33,7 +35,7 @@ export function Onboarding() {
                         <Avatar initials={w.name.split(" ").map((x) => x[0]).slice(0, 2).join("")} />
                         <div className="flex-1 leading-tight">
                           <div>{w.name}</div>
-                          <div className="mt-0.5 text-[13px] text-ink/50">{w.position} · starts {fmt(w.start)}</div>
+                          <div className="mt-0.5 text-[13px] text-ink/50"><T>{`${w.position} · starts ${fmt(w.start)}`}</T></div>
                         </div>
                         <span className="text-[13px] tabular-nums text-ink/60">{done(w.id)}/{TASKS.length}</span>
                       </div>
@@ -49,13 +51,13 @@ export function Onboarding() {
                   const on = s.tasks[cur.id][k];
                   return (
                     <li key={t.t} className="flex items-center gap-4 border-b border-ink/10 px-6 py-4 last:border-b-0">
-                      <button type="button" role="checkbox" aria-checked={on} aria-label={t.t} onClick={() => actions.toggleTask(cur.id, k)}
+                      <button type="button" role="checkbox" aria-checked={on} aria-label={tx(t.t)} onClick={() => actions.toggleTask(cur.id, k)}
                         className={`grid h-6 w-6 shrink-0 place-items-center border text-[13px] transition ${on ? "border-lime bg-lime text-ink" : "border-ink/30 bg-white hover:border-ink"}`}>
                         {on ? "✓" : ""}
                       </button>
                       <div className="flex-1 leading-tight">
-                        <div className={on ? "text-ink/45 line-through" : ""}>{t.t}</div>
-                        <div className="mt-1 text-[13px] text-ink/50">Responsible: {t.owner}</div>
+                        <div className={on ? "text-ink/45 line-through" : ""}><T>{t.t}</T></div>
+                        <div className="mt-1 text-[13px] text-ink/50"><T>{`Responsible: ${t.owner}`}</T></div>
                       </div>
                     </li>
                   );
@@ -63,7 +65,7 @@ export function Onboarding() {
               </ul>
               <div className="flex items-center justify-between border-t border-ink/10 px-6 py-4">
                 <Chip tone={done(cur.id) === TASKS.length ? "ok" : "warn"}>{done(cur.id) === TASKS.length ? "Completed" : `${TASKS.length - done(cur.id)} tasks left`}</Chip>
-                <Link href={`/hr/workers/${cur.id}`} className="text-[14px] text-ink/60 hover:text-ink">Open worker →</Link>
+                <Link href={`/hr/workers/${cur.id}`} className="text-[14px] text-ink/60 hover:text-ink"><T>Open worker →</T></Link>
               </div>
             </Card>
           </div>

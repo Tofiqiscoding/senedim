@@ -16,6 +16,25 @@ const monthsShort: [string, string][] = [
 ];
 
 const rules: [RegExp, (m: RegExpMatchArray) => string][] = [
+  [/^(\d+) working days?$/, (m) => `${m[1]} iş günü`],
+  [/^(\d+) of (\d+) workers$/, (m) => `${m[2]} işçidən ${m[1]}`],
+  [/^(\d+) onboarding now$/, (m) => `${m[1]} nəfər işə qəbul mərhələsindədir`],
+  [/^(\d+) tasks?$/, (m) => `${m[1]} tapşırıq`],
+  [/^(\d+) documents?$/, (m) => `${m[1]} sənəd`],
+  [/^(\d+) workers?$/, (m) => `${m[1]} işçi`],
+  [/^(\d+) requests?$/, (m) => `${m[1]} sorğu`],
+  [/^Documents \((\d+)\)$/, (m) => `Sənədlər (${m[1]})`],
+  [/^Requests \((\d+)\)$/, (m) => `Sorğular (${m[1]})`],
+  [/^Since (.+)$/, (m) => `${m[1]} tarixindən`],
+  [/^Probation ends (.+)$/, (m) => `Sınaq müddəti bitir: ${m[1]}`],
+  [/^HR note: (.+)$/, (m) => `HR qeydi: ${m[1]}`],
+  [/^HR: (.+)$/, (m) => `HR: ${m[1]}`],
+  [/^Onboarding: (\d+)\/(\d+) tasks done$/, (m) => `İşə qəbul: ${m[1]}/${m[2]} tapşırıq tamamlanıb`],
+  [/^You only have (\d+) annual leave days left\.$/, (m) => `Sizin cəmi ${m[1]} gün illik məzuniyyətiniz qalıb.`],
+  [/^Confirm (.+)$/, (m) => `Təsdiqlə: ${lookup(m[1])}`],
+  [/^(.+) request (approved|rejected)$/, (m) => `${lookup(m[1])} sorğusu ${m[2] === "approved" ? "təsdiqləndi" : "rədd edildi"}`],
+  [/^(.+) (approved|rejected)$/, (m) => `${lookup(m[1])} ${m[2] === "approved" ? "təsdiqləndi" : "rədd edildi"}`],
+  [/^(.+) saved to (.+)’s file and sent for signature\.$/, (m) => `${lookup(m[1])} ${m[2]} işçisinin şəxsi işinə əlavə olundu və imzaya göndərildi.`],
   [/^(\d+) days?$/, (m) => `${m[1]} gün`],
   [/^in (\d+) days?$/, (m) => `${m[1]} gündən sonra`],
   [/^(\d+) days ago$/, (m) => `${m[1]} gün əvvəl`],
@@ -69,3 +88,6 @@ export function translate(s: string, lang: Lang, vars?: Record<string, string | 
   if (vars) out = out.replace(/\{(\w+)\}/g, (_, k) => String(vars[k] ?? ""));
   return out;
 }
+
+/** Azerbaijani-only shortcut for strings outside JSX text (placeholders, ternaries …). */
+export const tx = (s: string, vars?: Record<string, string | number>) => translate(s, "az", vars);

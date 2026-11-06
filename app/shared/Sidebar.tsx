@@ -8,6 +8,8 @@ import { HR_USER } from "../lib/seed";
 import { signOut, useDemo, useSession } from "../lib/store";
 import Icon from "./Icon";
 import { nav, type Badge, type Role } from "./nav";
+import { tx } from "../i18n/translate";
+import { T } from "../i18n/LangProvider";
 
 export default function Sidebar({ role, open, onClose }: { role: Role; open: boolean; onClose: () => void }) {
   const pathname = usePathname();
@@ -43,7 +45,7 @@ export default function Sidebar({ role, open, onClose }: { role: Role; open: boo
       >
         <div className="relative z-10 flex h-[60px] shrink-0 items-center justify-between border-b border-white/20 px-6">
           <Logo href="/" className="text-[26px]" />
-          <span className="bg-lime px-2 py-0.5 text-[12px] text-ink">{role === "hr" ? "HR" : "Worker"}</span>
+          <span className="bg-lime px-2 py-0.5 text-[12px] text-ink"><T>{role === "hr" ? "HR" : "Worker"}</T></span>
           <button type="button" onClick={onClose} aria-label="Close menu" className="text-white/60 lg:hidden">
             <Icon name="x" />
           </button>
@@ -63,7 +65,7 @@ export default function Sidebar({ role, open, onClose }: { role: Role; open: boo
                 >
                   <span className="w-5 tabular-nums text-white/35">{String(gi + 1).padStart(2, "0")}</span>
                   <Icon name={g.icon} className="h-4 w-4" />
-                  <span className="flex-1">{g.label}</span>
+                  <span className="flex-1"><T>{g.label}</T></span>
                   <Icon name="chevron" className={`h-4 w-4 transition-transform ${expanded ? "" : "-rotate-90"}`} />
                 </button>
                 {expanded && (
@@ -78,7 +80,7 @@ export default function Sidebar({ role, open, onClose }: { role: Role; open: boo
                             onClick={onClose}
                             className={`flex items-center justify-between py-2 pl-5 pr-6 text-[15px] transition ${active ? "bg-lime text-ink" : "text-white/85 hover:bg-white/[0.06] hover:text-white"}`}
                           >
-                            {i.label}
+                            <T>{i.label}</T>
                             {n > 0 && (
                               <span className={`grid h-5 min-w-5 place-items-center px-1.5 text-[11px] ${active ? "bg-ink text-lime" : "bg-white/15 text-white"}`}>
                                 {n}
@@ -102,12 +104,12 @@ export default function Sidebar({ role, open, onClose }: { role: Role; open: boo
             </span>
             <div className="min-w-0 flex-1 leading-tight">
               <div className="truncate text-[15px]">{name}</div>
-              <div className="truncate text-[13px] text-white/50">{title}</div>
+              <div className="truncate text-[13px] text-white/50"><T>{title}</T></div>
             </div>
             <button
               type="button"
               aria-label="Sign out"
-              title="Sign out"
+              title={tx("Sign out")}
               onClick={() => {
                 signOut();
                 router.replace("/login");

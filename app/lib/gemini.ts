@@ -6,7 +6,7 @@ import { GoogleGenAI } from "@google/genai";
  *
  * Set GEMINI_API_KEY in .env.local (see .env.example). GEMINI_MODEL is optional.
  */
-export const GEMINI_MODEL = process.env.GEMINI_MODEL ?? "gemini-3.8-flash";
+export const GEMINI_MODEL = process.env.GEMINI_MODEL ?? "gemini-3.1-flash-lite";
 
 let client: GoogleGenAI | null = null;
 

@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { tx } from "../i18n/translate";
 import { actions } from "../lib/store";
+import { T } from "../i18n/LangProvider";
 
 /** Approve / Reject with ONE note that the worker will see next to the decision. */
 export default function Decision({ id, approveLabel = "Approve" }: { id: string; approveLabel?: string }) {
@@ -11,8 +13,8 @@ export default function Decision({ id, approveLabel = "Approve" }: { id: string;
   if (!mode) {
     return (
       <span className="flex gap-1.5">
-        <button type="button" onClick={() => setMode("Approved")} className="bg-ink px-3.5 py-2 text-[13px] text-lime transition hover:bg-[#10300d]">{approveLabel}</button>
-        <button type="button" onClick={() => setMode("Rejected")} className="border border-ink/25 bg-white px-3.5 py-2 text-[13px] transition hover:bg-mist">Reject</button>
+        <button type="button" onClick={() => setMode("Approved")} className="bg-ink px-3.5 py-2 text-[13px] text-lime transition hover:bg-[#10300d]"><T>{approveLabel}</T></button>
+        <button type="button" onClick={() => setMode("Rejected")} className="border border-ink/25 bg-white px-3.5 py-2 text-[13px] transition hover:bg-mist"><T>Reject</T></button>
       </span>
     );
   }
@@ -30,13 +32,13 @@ export default function Decision({ id, approveLabel = "Approve" }: { id: string;
         value={note}
         onChange={(e) => setNote(e.target.value)}
         aria-label="Note for the worker"
-        placeholder={approving ? "Note for the worker (optional)" : "Why? The worker will see this"}
+        placeholder={tx(approving ? "Note for the worker (optional)" : "Why? The worker will see this")}
         className="h-9 w-[220px] border border-ink/25 bg-white px-2.5 text-[13px] outline-none focus:border-ink"
       />
       <button type="submit" className={`px-3.5 py-2 text-[13px] ${approving ? "bg-ink text-lime" : "bg-red-700 text-white"}`}>
-        {approving ? `Confirm ${approveLabel.toLowerCase()}` : "Confirm reject"}
+        <T>{approving ? `Confirm ${approveLabel.toLowerCase()}` : "Confirm reject"}</T>
       </button>
-      <button type="button" onClick={() => setMode(null)} className="px-2 py-2 text-[13px] text-ink/60 hover:text-ink">Cancel</button>
+      <button type="button" onClick={() => setMode(null)} className="px-2 py-2 text-[13px] text-ink/60 hover:text-ink"><T>Cancel</T></button>
     </form>
   );
 }

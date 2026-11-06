@@ -7,6 +7,8 @@ import { actions, useDemo, useSession } from "../lib/store";
 import { range, workdays } from "../lib/util";
 import Decision from "../shared/Decision";
 import { Body, Card, Chip, Empty, Field, Flash, inputCls, PageHeader, Person, Select, Table, Tabs, textareaCls, toneOf } from "../shared/ui";
+import { T } from "../i18n/LangProvider";
+import { tx } from "../i18n/translate";
 
 const KIND_LABEL: Record<ReqKind, string> = { leave: "Leave", trip: "Business trip", document: "Document" };
 const LEAVE_TYPES = ["Annual leave", "Sick leave", "Unpaid leave"];
@@ -58,11 +60,11 @@ export function HrRequests() {
               rows={rows.map((r) => [
                 <Person key="p" name={worker(r.workerId)?.name ?? "Removed worker"} sub={worker(r.workerId)?.position} />,
                 <span key="t" className="leading-tight">
-                  <span className="block">{r.title}</span>
-                  <span className="mt-0.5 block text-[13px] text-ink/45">{KIND_LABEL[r.kind]}{r.kind === "leave" ? ` · ${workdays(r.from, r.to)} working days` : ""}</span>
+                  <span className="block">{tx(r.title)}</span>
+                  <span className="mt-0.5 block text-[13px] text-ink/45"><T>{KIND_LABEL[r.kind] + (r.kind === "leave" ? ` · ${workdays(r.from, r.to)} working days` : "")}</T></span>
                 </span>,
-                <span key="d" className="whitespace-nowrap text-ink/70">{r.kind === "document" ? r.note || "—" : range(r.from, r.to)}</span>,
-                <span key="n" className="text-ink/60">{r.comment ? `HR: ${r.comment}` : r.kind === "document" ? "" : r.note || "—"}</span>,
+                <span key="d" className="whitespace-nowrap text-ink/70"><T>{r.kind === "document" ? r.note || "—" : range(r.from, r.to)}</T></span>,
+                <span key="n" className="text-ink/60"><T>{r.comment ? `HR: ${r.comment}` : r.kind === "document" ? "" : r.note || "—"}</T></span>,
                 <Chip key="s" tone={toneOf(r.status)}>{r.status}</Chip>,
                 r.status === "Pending" ? <Decision key="a" id={r.id} approveLabel={r.kind === "document" ? "Generate" : "Approve"} /> : null,
               ])}
@@ -123,17 +125,17 @@ export function WorkerRequests() {
                 {(["leave", "trip", "document"] as ReqKind[]).map((k) => (
                   <button key={k} type="button" aria-pressed={kind === k} onClick={() => { setKind(k); setMsg(null); }}
                     className={`px-2 py-2.5 text-[14px] transition ${kind === k ? "bg-ink text-lime" : "hover:bg-mist"}`}>
-                    {KIND_LABEL[k]}
+                    <T>{KIND_LABEL[k]}</T>
                   </button>
                 ))}
               </div>
               {kind === "leave" && (
                 <div className="grid grid-cols-2 gap-px bg-ink/10 text-center">
-                  <div className="bg-mist py-3"><div className="text-[24px] leading-none">{me.leaveBalance}</div><div className="mt-1 text-[12px] text-ink/50">annual days left</div></div>
-                  <div className="bg-mist py-3"><div className="text-[24px] leading-none">{days}</div><div className="mt-1 text-[12px] text-ink/50">working days requested</div></div>
+                  <div className="bg-mist py-3"><div className="text-[24px] leading-none">{me.leaveBalance}</div><div className="mt-1 text-[12px] text-ink/50"><T>annual days left</T></div></div>
+                  <div className="bg-mist py-3"><div className="text-[24px] leading-none">{days}</div><div className="mt-1 text-[12px] text-ink/50"><T>working days requested</T></div></div>
                 </div>
               )}
-              {kind === "trip" && <Field label="Destination"><input value={dest} onChange={(e) => setDest(e.target.value)} className={inputCls} placeholder="e.g. Baku → Ganja" /></Field>}
+              {kind === "trip" && <Field label="Destination"><input value={dest} onChange={(e) => setDest(e.target.value)} className={inputCls} placeholder={tx("e.g. Baku → Ganja")} /></Field>}
               {kind === "leave" && <Field label="Type"><Select value={type} onChange={setType} options={LEAVE_TYPES} /></Field>}
               {kind === "document" && <Field label="Document"><Select value={docType} onChange={setDocType} options={DOC_TYPES} /></Field>}
               {kind !== "document" && (
@@ -143,9 +145,9 @@ export function WorkerRequests() {
                 </div>
               )}
               <Field label={kind === "leave" ? "Comment" : "Purpose"}>
-                <textarea value={note} onChange={(e) => setNote(e.target.value)} rows={3} className={textareaCls} placeholder={kind === "document" ? "e.g. For bank" : "Optional"} />
+                <textarea value={note} onChange={(e) => setNote(e.target.value)} rows={3} className={textareaCls} placeholder={tx(kind === "document" ? "e.g. For bank" : "Optional")} />
               </Field>
-              <button type="submit" className="w-full bg-ink px-4 py-3 text-lime transition hover:bg-[#10300d]">Send to HR</button>
+              <button type="submit" className="w-full bg-ink px-4 py-3 text-lime transition hover:bg-[#10300d]"><T>Send to HR</T></button>
               {msg && <Flash tone={msg.ok ? "ok" : "bad"}>{msg.text}</Flash>}
             </form>
           </Card>
@@ -157,12 +159,12 @@ export function WorkerRequests() {
                 head={["Request", "Dates / purpose", "Status", "Note from HR"]}
                 rows={mine.map((r) => [
                   <span key="t" className="leading-tight">
-                    <span className="block">{r.title}</span>
-                    <span className="mt-0.5 block text-[13px] text-ink/45">{KIND_LABEL[r.kind]}</span>
+                    <span className="block">{tx(r.title)}</span>
+                    <span className="mt-0.5 block text-[13px] text-ink/45"><T>{KIND_LABEL[r.kind]}</T></span>
                   </span>,
-                  <span key="d" className="whitespace-nowrap text-ink/70">{r.kind === "document" ? r.note || "—" : range(r.from, r.to)}</span>,
+                  <span key="d" className="whitespace-nowrap text-ink/70"><T>{r.kind === "document" ? r.note || "—" : range(r.from, r.to)}</T></span>,
                   <Chip key="s" tone={toneOf(r.status)}>{r.status === "Approved" && r.kind === "document" ? "Ready" : r.status}</Chip>,
-                  <span key="c" className="text-ink/60">{r.status === "Pending" ? "Waiting for HR" : r.comment || "No note"}</span>,
+                  <span key="c" className="text-ink/60"><T>{r.status === "Pending" ? "Waiting for HR" : r.comment || "No note"}</T></span>,
                 ])}
               />
             )}

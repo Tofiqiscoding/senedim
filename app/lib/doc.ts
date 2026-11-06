@@ -1,3 +1,4 @@
+import { tx } from "../i18n/translate";
 import { fmt } from "./util";
 import type { Worker } from "./seed";
 
@@ -14,7 +15,7 @@ export type Built = { title: string; sub: string; body: string[] };
 /** Generated documents are always in Azerbaijani (Azerbaijani letters ə ğ ı ö ü ş ç are the point). */
 export function buildDoc(templateName: string, w: Worker, over: { salary?: string; probation?: string } = {}): Built {
   const salary = over.salary || String(w.salary);
-  const probation = over.probation ?? String(w.probationMonths);
+  const probation = over.probation || String(w.probationMonths);
   const start = fmt(w.start);
   switch (templateName) {
     case "Order of hire":
@@ -22,7 +23,7 @@ export function buildDoc(templateName: string, w: Worker, over: { salary?: strin
         title: "ƏMR",
         sub: "İşə qəbul haqqında",
         body: [
-          `${w.name} ${start} tarixindən etibarən ${w.dept} şöbəsinə ${w.position} vəzifəsinə işə qəbul edilsin.`,
+          `${w.name} ${start} tarixindən etibarən ${tx(w.dept)} şöbəsinə ${tx(w.position)} vəzifəsinə işə qəbul edilsin.`,
           `Aylıq əmək haqqı ${salary} AZN müəyyən edilsin.`,
           `Sınaq müddəti ${probation} ay müəyyən edilsin.`,
           "Əsas: əmək müqaviləsi və işçinin ərizəsi.",
@@ -45,7 +46,7 @@ export function buildDoc(templateName: string, w: Worker, over: { salary?: strin
         title: "ARAYIŞ",
         sub: "",
         body: [
-          `Bu arayış ${w.name}-ın ${start} tarixindən "Şirkət" MMC-də ${w.dept} şöbəsində ${w.position} vəzifəsində çalışdığını təsdiq edir.`,
+          `Bu arayış ${w.name}-ın ${start} tarixindən "Şirkət" MMC-də ${tx(w.dept)} şöbəsində ${tx(w.position)} vəzifəsində çalışdığını təsdiq edir.`,
           `Aylıq əmək haqqı ${salary} AZN təşkil edir.`,
           "Arayış tələb olunduğu yerə təqdim etmək üçün verilmişdir.",
         ],
@@ -55,7 +56,7 @@ export function buildDoc(templateName: string, w: Worker, over: { salary?: strin
         title: "ƏMR",
         sub: "Məzuniyyət verilməsi haqqında",
         body: [
-          `${w.name}-a ${w.position} vəzifəsi üzrə növbəti əmək məzuniyyəti verilsin.`,
+          `${w.name}-a ${tx(w.position)} vəzifəsi üzrə növbəti əmək məzuniyyəti verilsin.`,
           "Əsas: işçinin ərizəsi və HR-ın razılığı.",
         ],
       };
@@ -65,7 +66,7 @@ export function buildDoc(templateName: string, w: Worker, over: { salary?: strin
         sub: "",
         body: [
           `"Şirkət" MMC (bundan sonra — İşəgötürən) bir tərəfdən, ${w.name} (FİN: ${w.fin}) (bundan sonra — İşçi) digər tərəfdən aşağıdakılar barədə bu müqaviləni bağladılar:`,
-          `1. İşçi ${w.dept} şöbəsində ${w.position} vəzifəsində işləməyi öhdəsinə götürür.`,
+          `1. İşçi ${tx(w.dept)} şöbəsində ${tx(w.position)} vəzifəsində işləməyi öhdəsinə götürür.`,
           `2. İşə başlama tarixi: ${start}. Sınaq müddəti — ${probation} ay.`,
           `3. Aylıq əmək haqqı ${salary} AZN təşkil edir.`,
           "4. Tərəflərin hüquq və vəzifələri Azərbaycan Respublikasının Əmək Məcəlləsinə uyğun müəyyən edilir.",
