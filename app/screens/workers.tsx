@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { DEPTS, STATUSES, TODAY, type Dept, type Worker, type WorkerStatus } from "../lib/seed";
 import { actions, useDemo } from "../lib/store";
@@ -14,7 +14,9 @@ export function WorkersList() {
   const s = useDemo();
   const [q, setQ] = useState("");
   const [dept, setDept] = useState("All departments");
-  const [st, setSt] = useState("All statuses");
+  const params = useSearchParams();
+  const fromUrl = params.get("status");
+  const [st, setSt] = useState(fromUrl && (STATUSES as string[]).includes(fromUrl) ? fromUrl : "All statuses");
   const list = s.workers.filter(
     (w) =>
       (dept === "All departments" || w.dept === dept) &&

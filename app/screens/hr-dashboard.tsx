@@ -63,10 +63,10 @@ export default function HrDashboard() {
       </PageHeader>
       <div className="border-b border-ink/15">
         <Grid cols="grid-cols-2 lg:grid-cols-4">
-          <Stat label="Workers" value={String(s.workers.length)} note={`${s.workers.filter((w) => w.status === "Onboarding").length} onboarding now`} tone="up" />
-          <Stat label="On leave today" value={String(s.workers.filter((w) => w.status === "On leave").length)} note="Approved absences" />
-          <Stat label="Pending requests" value={String(pending.length)} note="Waiting for your decision" tone={pending.length ? "warn" : undefined} />
-          <Stat label="Probation ending" value={String(expiring.length)} note={expiring[0] ? `${expiring[0].w.name} · ${expiring[0].left} days` : "Nothing urgent"} tone={expiring.length ? "warn" : undefined} />
+          <Stat label="Workers" value={String(s.workers.length)} note={`${s.workers.filter((w) => w.status === "Onboarding").length} onboarding now`} tone="up" href="/hr/workers" />
+          <Stat label="On leave today" value={String(s.workers.filter((w) => w.status === "On leave").length)} note="Approved absences" href="/hr/workers?status=On%20leave" />
+          <Stat label="Pending requests" value={String(pending.length)} note="Waiting for your decision" tone={pending.length ? "warn" : undefined} href="/hr/requests" />
+          <Stat label="Probation ending" value={String(expiring.length)} note={expiring[0] ? `${expiring[0].w.name} · ${expiring[0].left} days` : "Nothing urgent"} tone={expiring.length ? "warn" : undefined} href="/hr/workers?status=Probation" />
         </Grid>
 
         <div className="mt-px bg-ink/15">

@@ -1,5 +1,10 @@
+import { Suspense } from "react";
 import { WorkersList } from "../../screens/workers";
 
 export default function Page() {
-  return <WorkersList />;
+  return (
+    <Suspense fallback={null}>
+      <WorkersList />
+    </Suspense>
+  );
 }

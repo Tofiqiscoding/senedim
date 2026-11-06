@@ -100,20 +100,31 @@ function useCountUp(target: number) {
   return v;
 }
 
-export function Stat({ label, value, note, tone }: { label: string; value: string; note: string; tone?: "up" | "warn" }) {
+export function Stat({ label, value, note, tone, href }: { label: string; value: string; note: string; tone?: "up" | "warn"; href?: string }) {
   const t = useT();
   const isNum = /^\d+$/.test(value);
   const counted = useCountUp(isNum ? Number(value) : 0);
-  return (
-    <div className="flex min-h-[170px] flex-col justify-between bg-white p-5 sm:p-6">
-      <div className="text-[14px] text-ink/55">{t(label)}</div>
+  const body = (
+    <>
+      <div className="flex items-start justify-between gap-3 text-[14px] text-ink/55">
+        {t(label)}
+        {href && <Icon name="arrow" className="h-4 w-4 -translate-x-1 opacity-0 transition duration-200 group-hover:translate-x-0 group-hover:opacity-100" />}
+      </div>
       <div>
         <div className="text-[clamp(2.5rem,3.6vw,3.75rem)] leading-none tracking-[-0.04em] tabular-nums">{isNum ? counted : t(value)}</div>
         <div className={`mt-3 text-[13px] ${tone === "warn" ? "text-red-700" : tone === "up" ? "text-[#2f7a1f]" : "text-ink/55"}`}>
           {t(note)}
         </div>
       </div>
-    </div>
+    </>
+  );
+  const cls = "flex min-h-[170px] flex-col justify-between bg-white p-5 sm:p-6";
+  return href ? (
+    <Link href={href} className={`${cls} group transition-colors duration-200 hover:bg-mist focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ink`}>
+      {body}
+    </Link>
+  ) : (
+    <div className={cls}>{body}</div>
   );
 }
 

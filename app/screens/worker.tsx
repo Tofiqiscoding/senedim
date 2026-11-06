@@ -33,10 +33,10 @@ export function WorkerDashboard() {
       </PageHeader>
       <div className="border-b border-ink/15">
         <Grid cols="grid-cols-2 lg:grid-cols-4">
-          <Stat label="Annual leave left" value={String(me.leaveBalance)} note="working days" tone="up" />
-          <Stat label="Pending requests" value={String(pending.length)} note="Waiting for HR" />
-          <Stat label="To sign" value={String(toSign.length)} note={toSign[0]?.title ?? "Nothing to sign"} tone={toSign.length ? "warn" : undefined} />
-          <Stat label={probation !== null ? "Probation ends in" : "Status"} value={probation !== null ? `${Math.max(probation, 0)}d` : me.status} note={probation !== null ? fmt(addMonths(me.start, me.probationMonths)) : `Since ${fmt(me.start)}`} />
+          <Stat label="Annual leave left" value={String(me.leaveBalance)} note="working days" tone="up" href="/worker/requests" />
+          <Stat label="Pending requests" value={String(pending.length)} note="Waiting for HR" href="/worker/requests" />
+          <Stat label="To sign" value={String(toSign.length)} note={toSign[0]?.title ?? "Nothing to sign"} tone={toSign.length ? "warn" : undefined} href="/worker/documents" />
+          <Stat label={probation !== null ? "Probation ends in" : "Status"} value={probation !== null ? `${Math.max(probation, 0)}d` : me.status} note={probation !== null ? fmt(addMonths(me.start, me.probationMonths)) : `Since ${fmt(me.start)}`} href="/worker/profile" />
         </Grid>
         <div className="mt-px grid gap-px bg-ink/15 xl:grid-cols-[1.45fr_1fr]">
           <Card title="My requests" action="New request" href="/worker/requests">
