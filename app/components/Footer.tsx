@@ -2,15 +2,14 @@ import Link from "next/link";
 import { T } from "../i18n/LangProvider";
 
 const cols: [string, string[]][] = [
-  ["Navigate", ["Home", "Products", "How it works", "Teams", "Security"]],
+  ["Navigate", ["Home", "Products", "How it works", "Teams"]],
   ["Roles", ["HR", "Worker"]],
-  ["Roadmap", ["ASAN İmza", "Telegram", "AI CV screening"]],
 ];
 
 export default function Footer() {
   return (
     <footer className="noise relative border-t border-white/20 bg-ink">
-      <div className="relative z-10 grid gap-10 px-6 py-12 md:px-9 lg:grid-cols-[var(--left)_repeat(3,minmax(0,1fr))_auto] lg:pt-[44px]">
+      <div className="relative z-10 grid gap-10 px-6 py-12 md:px-9 lg:grid-cols-[var(--left)_repeat(2,minmax(0,1fr))_auto] lg:pt-[44px]">
         <p className="max-w-[16em] text-[15px] leading-snug text-white/70">
           <T>senedim saves time, removes lost approvals and keeps every new hire’s paperwork in order.</T>
         </p>

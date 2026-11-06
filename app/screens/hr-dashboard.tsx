@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { HR_USER, TASKS, TODAY } from "../lib/seed";
+import { DEPTS, HR_USER, TASKS, TODAY } from "../lib/seed";
 import { useDemo } from "../lib/store";
 import Decision from "../shared/Decision";
 import { addMonths, diffDays, fmtShort, range } from "../lib/util";
@@ -19,7 +19,7 @@ export default function HrDashboard() {
     .map((w) => ({ w, left: diffDays(TODAY, addMonths(w.start, w.probationMonths)) }))
     .filter((x) => x.left <= 60)
     .sort((a, b) => a.left - b.left);
-  const byDept = ["Operations", "Sales", "IT", "Finance"].map((d) => [d, s.workers.filter((w) => w.dept === d).length] as const);
+  const byDept = DEPTS.map((d) => [d, s.workers.filter((w) => w.dept === d).length] as const);
   const max = Math.max(1, ...byDept.map((x) => x[1]));
   const activity = s.notices.filter((n) => n.to === "hr").slice(0, 5);
 

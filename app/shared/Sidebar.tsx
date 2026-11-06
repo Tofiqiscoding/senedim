@@ -52,7 +52,7 @@ export default function Sidebar({ role, open, onClose }: { role: Role; open: boo
         </div>
 
         <nav className="no-scrollbar relative z-10 flex-1 overflow-y-auto py-3" aria-label="Main">
-          {nav[role].map((g, gi) => {
+          {nav[role].map((g) => {
             const hasActive = g.items.some((i) => isActive(i.href));
             const expanded = hasActive || !closed[g.id];
             return (
@@ -63,7 +63,6 @@ export default function Sidebar({ role, open, onClose }: { role: Role; open: boo
                   onClick={() => setClosed((c) => ({ ...c, [g.id]: expanded }))}
                   className="flex w-full items-center gap-3 px-6 py-2.5 text-left text-[13px] text-white/55 transition hover:text-white"
                 >
-                  <span className="w-5 tabular-nums text-white/35">{String(gi + 1).padStart(2, "0")}</span>
                   <Icon name={g.icon} className="h-4 w-4" />
                   <span className="flex-1"><T>{g.label}</T></span>
                   <Icon name="chevron" className={`h-4 w-4 transition-transform ${expanded ? "" : "-rotate-90"}`} />

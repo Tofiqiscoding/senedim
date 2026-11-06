@@ -91,10 +91,10 @@ function Product1() {
             title="Documents"
             cols={["Name", "Template", "Date", "Status"]}
             rows={[
-              { who: "Aysel Məmmədova", cells: ["Contract", "12 Nov"], status: ["Signed", "ok"] },
-              { who: "Rauf Quliyev", cells: ["Hire order", "11 Nov"], status: ["Signed", "ok"] },
-              { who: "Nigar Əliyeva", cells: ["NDA", "11 Nov"], status: ["Pending", "warn"] },
-              { who: "Tural Səfərov", cells: ["Certificate", "09 Nov"], status: ["Draft", "bad"] },
+              { who: "Mahmud Ahmadov", cells: ["Contract", "12 Nov"], status: ["Signed", "ok"] },
+              { who: "Brett Pit", cells: ["Hire order", "11 Nov"], status: ["Signed", "ok"] },
+              { who: "Tofig Changirov", cells: ["NDA", "11 Nov"], status: ["Pending", "warn"] },
+              { who: "Faiq Tahirli", cells: ["Certificate", "09 Nov"], status: ["Draft", "bad"] },
             ]}
           />
         </FeatureCard>
@@ -104,7 +104,7 @@ function Product1() {
           text="Every contract, order and certificate lives in the employee’s file — nothing is lost in email."
         >
           <Table
-            title="Aysel Məmmədova"
+            title="Mahmud Ahmadov"
             cols={["Document", "Type", "Version", "Status"]}
             rows={[
               { who: "Employment contract", cells: ["Contract", "v2"], status: ["Signed", "ok"] },
@@ -147,9 +147,9 @@ function Product2() {
       <div className="noise relative flex min-h-[640px] flex-col items-center justify-center gap-0 overflow-hidden bg-ink p-8 text-white">
         <div className="relative z-10 w-full max-w-[380px] rounded-2xl border border-white/15 bg-white/[0.06] p-5">
           <div className="flex items-center gap-3">
-            <Avatar n="NƏ" />
+            <Avatar n="TC" />
             <div className="flex-1 leading-tight">
-              <div>Nigar Əliyeva</div>
+              <div>Tofig Changirov</div>
               <div className="text-sm text-white/50"><T>Designer · Offer accepted</T></div>
             </div>
             <span className="grid h-10 w-10 place-items-center rounded-full bg-lime text-ink">✓</span>

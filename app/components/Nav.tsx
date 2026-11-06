@@ -22,7 +22,6 @@ const links = [
   ["Products", "#products"],
   ["How it works", "#how"],
   ["Teams", "#teams"],
-  ["Security", "#secure"],
 ];
 
 export default function Nav() {

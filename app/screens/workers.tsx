@@ -109,7 +109,7 @@ export function WorkerForm({ worker }: { worker?: Worker }) {
   return (
     <form onSubmit={submit} className="space-y-6 p-5 sm:p-6">
       <div className="grid gap-5 sm:grid-cols-2">
-        {text("name", "Full name", { placeholder: "e.g. Nigar Əliyeva", required: true })}
+        {text("name", "Full name", { placeholder: "e.g. Tofig Changirov", required: true })}
         {text("email", "Email", { type: "email", placeholder: "name@demo.az", required: true })}
         {text("phone", "Phone")}
         {text("fin", "FIN (ID number)", { placeholder: "7 characters", maxLength: 7 })}

@@ -6,7 +6,6 @@ import HowItWorks from "./components/HowItWorks";
 import Products from "./components/Products";
 import PixelDivider from "./components/PixelDivider";
 import Teams from "./components/Teams";
-import Secure from "./components/Secure";
 import Cta from "./components/Cta";
 import Footer from "./components/Footer";
 
@@ -22,7 +21,6 @@ export default function Home() {
         <Products />
         <PixelDivider />
         <Teams />
-        <Secure />
         <Cta />
       </main>
       <Footer />

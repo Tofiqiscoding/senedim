@@ -25,7 +25,7 @@ export const az: Record<string, string> = {
 
   /* ---------- landing: results ---------- */
   "What you get.": "Nə əldə edirsiniz.",
-  "Less paperwork.": "Daha az kağızbazlıq.",
+  "Less paperwork.": "Daha az kağız dövriyyəsi.",
   "<1 min": "<1 dəq",
   "to generate a contract, instead of ~20 minutes by hand": "müqavilə yaratmaq üçün, əllə ~20 dəqiqə əvəzinə",
   "1 click": "1 klik",
@@ -119,8 +119,6 @@ export const az: Record<string, string> = {
     "Şirkətinizin artıq istifadə etdiyi alətlərlə — e-imza, mesajlaşma və əmək haqqı — əlavə yük olmadan və addım buraxmadan birləşin.",
   "Integrations": "İnteqrasiyalar",
   "Roadmap": "Planda",
-  "Secure.": "Təhlükəsiz.",
-  "Trusted.": "Etibarlı.",
   "Each role sees only its own screens and data. Every approval is logged with who signed and when — and every PDF prints Azerbaijani letters (ə, ğ, ı, ö, ü, ş, ç) correctly.":
     "Hər rol yalnız öz ekranlarını və məlumatlarını görür. Hər təsdiq kimin və nə vaxt imzaladığı ilə qeyd olunur — hər PDF-də Azərbaycan hərfləri (ə, ğ, ı, ö, ü, ş, ç) düzgün çıxır.",
   "Role-based": "Rola əsaslanan",
@@ -129,8 +127,6 @@ export const az: Record<string, string> = {
   "trail": "izi",
   "AZ labor-code": "Əmək Məcəlləsinə",
   "templates": "uyğun şablonlar",
-  "Skip the Paperwork.": "Kağızbazlığa son.",
-  "Forever.": "Birdəfəlik.",
   "See It in Action": "İşləməsinə baxın",
   "senedim saves time, removes lost approvals and keeps every new hire’s paperwork in order.":
     "senedim vaxta qənaət edir, itən təsdiqləri aradan qaldırır və hər yeni işçinin sənədlərini nizamda saxlayır.",
@@ -624,12 +620,20 @@ export const az: Record<string, string> = {
   "Starts": "Başlayır",
 
 
-  "e.g. Nigar Əliyeva": "məs. Nigar Əliyeva",
+  "e.g. Tofig Changirov": "məs. Tofig Changirov",
   "name@demo.az": "ad@demo.az",
   "7 characters": "7 simvol",
   "e.g. Product Designer": "məs. Məhsul dizayneri",
   "e.g. 2200": "məs. 2200",
   "Request sent to HR.": "Sorğu HR-a göndərildi.",
+
+
+  "Marketing": "Marketinq",
+  "Marketing Specialist": "Marketinq mütəxəssisi",
+  "Marketing Director": "Marketinq direktoru",
+  "Legal Advisor": "Hüquq məsləhətçisi",
+  "Quality Control Manager": "Keyfiyyətə nəzarət meneceri",
+  "Probation ends in 6 days": "Sınaq müddəti 6 gündən sonra bitir",
 
   /* ---------- misc ---------- */
   "Filter": "Filtr",

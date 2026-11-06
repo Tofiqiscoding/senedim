@@ -1,7 +1,7 @@
 // Types + seed ("demo") data. Today in the demo is Friday, 6 November 2026.
 export const TODAY = "2026-11-06";
 
-export const DEPTS = ["Operations", "Sales", "IT", "Finance"] as const;
+export const DEPTS = ["Operations", "Sales", "IT", "Finance", "Marketing", "Legal"] as const;
 export type Dept = (typeof DEPTS)[number];
 export type WorkerStatus = "Active" | "Probation" | "Onboarding" | "On leave";
 export const STATUSES: WorkerStatus[] = ["Active", "Probation", "Onboarding", "On leave"];
@@ -67,10 +67,10 @@ const W = (
   salary: number, leaveBalance: number, probationMonths = 3, contractType: Worker["contractType"] = "Open-ended",
 ): Worker => ({
   id: "w" + n, name, email: emailFor(name), position, dept, start, status, salary, leaveBalance, probationMonths, contractType,
-  phone: `+994 50 ${String(300 + n * 37).slice(0, 3)} ${String(10 + n * 3)} ${String(20 + n * 5)}`,
-  fin: ["5AB1C23", "7KD9F41", "2MX3P88", "9QR5T12", "4LN7Z60", "6HV2B35", "1CE8W74", "3PY4K09", "8TU6D51", "0GS1J27", "5RB9N43", "2XA7M16", "7FZ3Q92"][n - 1] ?? "0000000",
-  birth: `199${n % 10}-0${(n % 9) + 1}-1${n % 9}`,
-  address: ["Nasimi district", "Yasamal district", "Narimanov district", "Khatai district", "Sabail district"][n % 5] + ", Baku",
+  phone: `+994 ${["50", "51", "55", "70", "77", "99"][n % 6]} ${String(300 + n * 37).slice(0, 3)} ${String(10 + n * 3)} ${String(20 + n * 5)}`,
+  fin: ["5AB1C23", "7KD9F41", "2MX3P88", "9QR5T12", "4LN7Z60", "6HV2B35", "1CE8W74", "3PY4K09", "8TU6D51", "0GS1J27", "5RB9N43", "2XA7M16"][n - 1] ?? "0000000",
+  birth: `${1972 + ((n * 3) % 26)}-${String(((n * 5) % 12) + 1).padStart(2, "0")}-${String(((n * 7) % 27) + 1).padStart(2, "0")}`,
+  address: ["Nasimi", "Yasamal", "Narimanov", "Khatai", "Sabail", "Binagadi", "Nizami", "Garadagh"][n % 8] + " district, Baku",
 });
 
 const R = (id: string, workerId: string, kind: ReqKind, title: string, from: string, to: string, note: string,
@@ -78,22 +78,21 @@ const R = (id: string, workerId: string, kind: ReqKind, title: string, from: str
 
 export function seed(): State {
   return {
-    v: 3,
+    v: 4,
     seq: 100,
     workers: [
-      W(1, "Aysel Məmmədova", "Product Designer", "IT", "2022-06-01", "Active", 2400, 13),
-      W(2, "Elvin Hüseynov", "Sales Manager", "Sales", "2020-01-20", "Active", 3600, 9),
-      W(3, "Nigar Əliyeva", "Designer", "IT", "2026-11-01", "Onboarding", 2200, 21),
-      W(4, "Kamran Əsgərov", "Developer", "IT", "2026-11-15", "Onboarding", 2800, 21),
-      W(5, "Fidan Nəbiyeva", "Accountant", "Finance", "2026-10-05", "Probation", 1900, 21),
-      W(6, "Rauf Quliyev", "Sales Specialist", "Sales", "2026-05-12", "Probation", 1700, 15, 6),
-      W(7, "Tural Səfərov", "Operations Specialist", "Operations", "2023-02-10", "Active", 1800, 11),
-      W(8, "Səbinə Rzayeva", "Sales Specialist", "Sales", "2026-09-07", "Probation", 1700, 21),
-      W(9, "Orxan Cəfərov", "Backend Developer", "IT", "2021-09-01", "Active", 3400, 7),
-      W(10, "Günel Hüseynova", "Financial Analyst", "Finance", "2022-02-14", "Active", 2300, 16),
-      W(11, "Murad Əhmədov", "Operations Manager", "Operations", "2019-04-08", "Active", 3000, 4),
-      W(12, "Ləman Qasımova", "Sales Specialist", "Sales", "2024-01-22", "On leave", 1800, 6),
-      W(13, "Samir Babayev", "DevOps Engineer", "IT", "2023-07-03", "Active", 3100, 18),
+      W(1, "Mahmud Ahmadov", "Product Designer", "IT", "2022-06-01", "Active", 2400, 13),
+      W(2, "Hummet Azimzada", "Sales Manager", "Sales", "2020-01-20", "Active", 3600, 9, 0),
+      W(3, "Tofig Changirov", "Marketing Specialist", "Marketing", "2026-11-01", "Onboarding", 2100, 21, 3, "Fixed-term"),
+      W(4, "Togrul Baxisov", "Developer", "IT", "2026-11-15", "Onboarding", 2900, 21),
+      W(5, "Sadiq Aslanli", "Accountant", "Finance", "2026-10-05", "Probation", 1900, 21, 3),
+      W(6, "Brett Pit", "Sales Specialist", "Sales", "2026-05-12", "Probation", 1700, 15, 6),
+      W(7, "Faiq Tahirli", "Operations Specialist", "Operations", "2023-02-10", "Active", 1800, 11, 0),
+      W(8, "Rahib Imamquliyev", "Legal Advisor", "Legal", "2026-09-07", "Probation", 2600, 21, 3),
+      W(9, "Qafar Bagirov", "Backend Developer", "IT", "2021-09-01", "Active", 3400, 7, 0, "Fixed-term"),
+      W(10, "Charlie Kirk", "Financial Analyst", "Finance", "2022-02-14", "Active", 2300, 16, 0),
+      W(11, "Walter White", "Quality Control Manager", "Operations", "2019-04-08", "Active", 3000, 4, 0),
+      W(12, "Donald Trump", "Marketing Director", "Marketing", "2024-01-22", "On leave", 4500, 6, 0, "Fixed-term"),
     ],
     requests: [
       R("r1", "w1", "leave", "Annual leave", "2026-11-12", "2026-11-16", "Family trip"),
@@ -133,9 +132,9 @@ export function seed(): State {
       w5: [true, true, true, true, true, true],
     },
     notices: [
-      { id: "n1", to: "hr", text: "New leave request · Aysel Məmmədova", sub: "Annual leave, 12 – 16 Nov", when: "2 h ago", unread: true, icon: "calendar", href: "/hr/requests" },
-      { id: "n2", to: "hr", text: "Probation ends in 7 days · Rauf Quliyev", sub: "Decide to confirm or extend", when: "1 h ago", unread: true, icon: "clock", href: "/hr/workers/w6" },
-      { id: "n3", to: "hr", text: "Document request · Nigar Əliyeva", sub: "Work certificate for bank", when: "Today", unread: true, icon: "file", href: "/hr/requests" },
+      { id: "n1", to: "hr", text: "New leave request · Mahmud Ahmadov", sub: "Annual leave, 12 – 16 Nov", when: "2 h ago", unread: true, icon: "calendar", href: "/hr/requests" },
+      { id: "n2", to: "hr", text: "Probation ends in 6 days · Brett Pit", sub: "Decide to confirm or extend", when: "1 h ago", unread: true, icon: "clock", href: "/hr/workers/w6" },
+      { id: "n3", to: "hr", text: "Document request · Tofig Changirov", sub: "Work certificate for bank", when: "Today", unread: true, icon: "file", href: "/hr/requests" },
       { id: "n4", to: "w1", text: "Your sick leave was approved", sub: "20 – 21 Oct", when: "Yesterday", unread: false, icon: "check", href: "/worker/requests" },
       { id: "n5", to: "w1", text: "Work certificate is ready", sub: "You can view and download it in My documents", when: "2 days ago", unread: true, icon: "file", href: "/worker/documents" },
       { id: "n6", to: "w1", text: "Please sign the NDA", sub: "Your signature is the last step", when: "3 days ago", unread: true, icon: "doc", href: "/worker/documents" },
